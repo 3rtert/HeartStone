@@ -2,6 +2,9 @@ package players;
 
 import main.Game;
 
+import java.util.ArrayList;
+import moves.Move;
+
 public class SpoonPlayer implements PlayerSIInterface
 {
 
@@ -20,7 +23,7 @@ public class SpoonPlayer implements PlayerSIInterface
 	}
 
 	@Override
-	public FullMove calculateNextMove(int maxTime)
+	public ArrayList<Move> calculateNextMove(int maxTime)
 	{
 		// TODO Auto-generated method stub
 		return null;

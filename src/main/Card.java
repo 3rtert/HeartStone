@@ -15,19 +15,20 @@ public class Card {
     // 3 - deal 3 damage
     // 4 - destroy random enemy minion
     private int numberOfMagic;
-
+    private boolean magicCard;
     private boolean attackPossible;
 
-    Card(int c, int a, int l, int magic, boolean atPos) {
-        cost = c;
-        attack = a;
-        life = l;
-        numberOfMagic = magic;
-        attackPossible = atPos;
+    public Card(int cost, int attack, int life, int numberOfMagic, boolean magicCard, boolean attackPossible) {
+        this.cost = cost;
+        this.attack = attack;
+        this.life = life;
+        this.numberOfMagic = numberOfMagic;
+        this.magicCard = magicCard;
+        this.attackPossible = attackPossible;
     }
 
     protected Card clone() {
-        return new Card(cost, attack, life, numberOfMagic, attackPossible);
+        return new Card(cost, attack, life, numberOfMagic, magicCard, attackPossible);
     }
 
     public boolean canCardAttack() {
@@ -62,5 +63,13 @@ public class Card {
 
     public void enableAttack() {
         attackPossible = true;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public boolean isMagicCard() {
+        return magicCard;
     }
 }
