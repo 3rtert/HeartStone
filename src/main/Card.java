@@ -72,4 +72,37 @@ public class Card {
     public boolean isMagicCard() {
         return magicCard;
     }
+
+    @Override
+    public String toString() {
+        String output = "<html>";
+        if(magicCard) {
+            output += ("Mana: " + cost + ", ");
+        } else {
+            output += ("Attack: " + attack + ", Life: " + life + ", Mana: " + cost);
+        }
+        if(numberOfMagic != -1) {
+            output += ("<br>" + getStringMagicEffect());
+        }
+        output += "</html>";
+
+        return output;
+    }
+
+    private String getStringMagicEffect() {
+        switch(numberOfMagic) {
+            case 0:
+                return "Zadaj przeciwnemu bohaterowi 1 obrażeń";
+            case 1:
+                return "Dodaj swojemu bohaterowi 2 punkty życia";
+            case 2:
+                return "Zadaj 2 obrażeń wszystkim kartom przeciwnika na planszy";
+            case 3:
+                return "Zadaj przeciwnemu bohaterowi 3 obrażeń";
+            case 4:
+                return "Zniszcz losową jednostkę przeciwnika";
+            default:
+                return "Nie zdefiniowano";
+        }
+    }
 }

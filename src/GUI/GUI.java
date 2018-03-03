@@ -1,5 +1,7 @@
 package GUI;
 
+import main.Card;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,21 +11,22 @@ import java.util.HashMap;
 
 public class GUI extends JFrame implements GUIInterface {
 
-    private static final int WIDTH = 1000;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 800;
 
-    Map<PlayerNumber, PlayerGUIStatFields> players = new HashMap<>();
+    private Map<PlayerNumber, PlayerGUIStatFields> players = new HashMap<>();
 
     public GUI() {
         super("Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocation(50,50);
-        setLayout(new GridLayout(4, 7));
+        setLayout(new GridLayout(8, 10));
 
 
         PlayerGUIStatFields player1Stats = new PlayerGUIStatFields();
         player1Stats.setPlayerName("G1");
+        addFieldsToGrid(player1Stats.getHandFields());
         addFieldsToGrid(player1Stats.getFields());
         addFieldsToGrid(player1Stats.getBattleFields());
         players.put(PlayerNumber.ONE, player1Stats);
@@ -31,6 +34,7 @@ public class GUI extends JFrame implements GUIInterface {
         PlayerGUIStatFields player2Stats = new PlayerGUIStatFields();
         addFieldsToGrid(player2Stats.getBattleFields());
         addFieldsToGrid(player2Stats.getFields());
+        addFieldsToGrid(player2Stats.getHandFields());
         player2Stats.setPlayerName("G2");
         players.put(PlayerNumber.TWO, player2Stats);
 
@@ -43,6 +47,7 @@ public class GUI extends JFrame implements GUIInterface {
             field.setBorder(border);
             field.setHorizontalAlignment(JLabel.CENTER);
             field.setVerticalAlignment(JLabel.CENTER);
+            field.setOpaque(true);
             add(field, SwingConstants.CENTER);
         }
     }
@@ -58,8 +63,8 @@ public class GUI extends JFrame implements GUIInterface {
     }
 
     @Override
-    public void addCardToPlayersHand(PlayerNumber player, int index, int cardNumber, int dmg, int life, int manaExpense, int magicNumber) {
-        players.get(player).addCardToHand(index, cardNumber, dmg, life, manaExpense, magicNumber);
+    public void addCardToPlayersHand(PlayerNumber player, int index, Card card) {
+        players.get(player).addCardToHand(index, card);
     }
 
     @Override
@@ -68,7 +73,15 @@ public class GUI extends JFrame implements GUIInterface {
     }
 
     @Override
-    public void addCardToBattleField(PlayerNumber player, int index, int cardNumber, int dmg, int life, int manaExpense, int magicNumber) {
-        players.get(player).addCardToBattleField(index, cardNumber, dmg, life, manaExpense, magicNumber);
+    public void addCardToBattleField(PlayerNumber player, int index, Card card) {
+        players.get(player).addCardToBattleField(index, card);
+    }
+
+    public void clearCards(PlayerNumber player) {
+        players.get(player).clearCards();
+    }
+
+    public void moveNotification(PlayerNumber player, boolean set) {
+        players.get(player).moveNotification(set);
     }
 }

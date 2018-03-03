@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Player {
     private int hp = 20;
     private int mana;
+    private int penaltyForEmptyDeck = 1;
+
     private ArrayList<Card> cardOnTable;
     private ArrayList<Card> cardsInHand;
 
@@ -169,5 +171,25 @@ public class Player {
 
     public int getMana() {
         return mana;
+    }
+
+    public ArrayList<Card> getCardOnTable() {
+        return cardOnTable;
+    }
+
+    public ArrayList<Card> getCardsInHand() {
+        return cardsInHand;
+    }
+
+    void getCard() {
+        if (getNumberOfCardsInStack() > 0) {
+            getCardFromDeck();
+        } else {
+            dealDmgToChamp(penaltyForEmptyDeck++);
+        }
+    }
+
+    public void updateMana(int round) {
+        mana = Math.min(round, 10);
     }
 }

@@ -17,6 +17,8 @@ public class Game {
 
     private int round;
     private int playerWin = -1;
+    private boolean withGui;
+    private GUIInterface gui;
 
     void init(boolean withGui) {
         player[0] = new Player();
@@ -37,18 +39,9 @@ public class Game {
         currentPlayer = 0;
         enemyPlayer = 1;
         round = 0;
-
-        if (withGui) {
-            GUIInterface gui = new GUI();
-            gui.setNumberOfCardsInDeck(PlayerNumber.ONE, 18);
-            gui.setNumberOfCardsInDeck(PlayerNumber.TWO, 17);
-            gui.setAmountOfMana(PlayerNumber.ONE, 1);
-            gui.setAmountOfMana(PlayerNumber.TWO, 1);
-            gui.setNumberOfLifePoints(PlayerNumber.ONE, 20);
-            gui.setNumberOfLifePoints(PlayerNumber.TWO, 20);
-
-            gui.addCardToPlayersHand(PlayerNumber.ONE, 2, 1, 10, 10, 10, 1);
-            gui.addCardToPlayersHand(PlayerNumber.TWO, 1, 2, 100, 100, 100, 100);
+        this.withGui = withGui;
+        if (this.withGui) {
+            gui = new GUI();
         }
     }
 
@@ -65,19 +58,24 @@ public class Game {
     }
     void start() {
         while (playerWin == -1) {
+            initializeMove();
+            if (this.withGui) {
+                refreshGui();
+            }
             move();
         }
         System.out.println("Wygral gracz numer: " + playerWin);
     }
-
-    void move() {
-        if (currentPlayer == 1) {
+    private void initializeMove() {
+        if (currentPlayer == 0) {
             nextRound();
         }
-        updateMana();
-        getCard();
+        player[currentPlayer].updateMana(round);
+        player[currentPlayer].getCard();
         player[currentPlayer].updateCardsAttack();
+    }
 
+    void move() {
         PlayerSIInterface playerSI = new ConsolePlayer();
         ArrayList<Move> moves = playerSI.calculateNextMove(100);
         for(Move move: moves) {
@@ -91,17 +89,6 @@ public class Game {
         endTour();
     }
 
-    void getCard() {
-        if (player[currentPlayer].getNumberOfCardsInStack() > 0)
-            player[currentPlayer].getCardFromDeck();
-        else
-            player[currentPlayer].dealDmgToChamp(1);
-    }
-
-    public void updateMana() {
-        player[currentPlayer].setMana(Math.min(round, 10));
-    }
-
     void nextRound() {
         round += 1;
     }
@@ -111,4 +98,28 @@ public class Game {
         enemyPlayer = enemyPlayer == 0 ? 1 : 0;
     }
 
+    private void refreshGui() {
+        refreshGuiForPlayer(PlayerNumber.ONE, 0);
+        refreshGuiForPlayer(PlayerNumber.TWO, 1);
+    }
+
+    private void refreshGuiForPlayer(PlayerNumber pl, int index) {
+        gui.setNumberOfCardsInDeck(pl, player[index].getNumberOfCardsInStack());
+        gui.setAmountOfMana(pl, player[index].getMana());
+        gui.setNumberOfLifePoints(pl, player[index].getHealth());
+
+        gui.clearCards(pl);
+        ArrayList<Card> cards = player[index].getCardsInHand();
+        for(int i = 0; i< cards.size(); i++) {
+            Card card = cards.get(i);
+            gui.addCardToPlayersHand(pl, i, card);
+        }
+
+        cards = player[index].getCardOnTable();
+        for(int i = 0; i< cards.size(); i++) {
+            Card card = cards.get(i);
+            gui.addCardToBattleField(pl, i, card);
+        }
+        gui.moveNotification(pl, index == currentPlayer);
+    }
 }

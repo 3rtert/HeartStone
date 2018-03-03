@@ -38,7 +38,7 @@ class PlayerTest {
 
     @Test
     void dealDmgToCardTest() {
-        Card card = new Card(1,2,10,-1, true);
+        Card card = new Card(1,2,10,-1, false,true);
         player.addCardToDeck(card);
 
         assertEquals(1, player.getNumberOfCardsInStack());
@@ -64,8 +64,8 @@ class PlayerTest {
 
     @Test
     void destroyRandomCardOnTableTest() {
-        Card card = new Card(1,2,10,-1, true);
-        Card card2 = new Card(2,3,15,-1, true);
+        Card card = new Card(1,2,10,-1,false, true);
+        Card card2 = new Card(2,3,15,-1, false, true);
         player.addCardToDeck(card);
         player.addCardToDeck(card2);
 
