@@ -1,10 +1,9 @@
 package main;
 
-public class Card
-{
-	private int cost;
-	private int attack;
-	private int life;
+public class Card {
+    private int cost;
+    private int attack;
+    private int life;
 
     // card with effect
     //-1 if magic spell not exist
@@ -17,47 +16,51 @@ public class Card
     // 4 - destroy random enemy minion
     private int numberOfMagic;
 
-	private boolean attackPossible=false;
-	
-	Card(int c, int a, int l, int magic)
-	{
-		cost=c;
-		attack=a;
-		life=l;
-		numberOfMagic=magic;
-	}
+    private boolean attackPossible;
 
-	public boolean canCardAttack() {
-	    return attackPossible;
+    Card(int c, int a, int l, int magic, boolean atPos) {
+        cost = c;
+        attack = a;
+        life = l;
+        numberOfMagic = magic;
+        attackPossible = atPos;
+    }
+
+    protected Card clone() {
+        return new Card(cost, attack, life, numberOfMagic, attackPossible);
+    }
+
+    public boolean canCardAttack() {
+        return attackPossible;
     }
 
     public void attack() {
-        if(attackPossible) {
-			attackPossible = false;
-		}
+        if (attackPossible) {
+            attackPossible = false;
+        }
     }
 
     public void dealDmg(int dmg) {
-	    life -= dmg;
-	}
+        life -= dmg;
+    }
 
     public boolean isCardDestroyed() {
-		return life <= 0;
-	}
+        return life <= 0;
+    }
 
     public int getAttack() {
         return attack;
     }
 
     public int getManaCost() {
-		return cost;
-	}
+        return cost;
+    }
 
-	public int getNumberOfMagic() {
-	    return numberOfMagic;
+    public int getNumberOfMagic() {
+        return numberOfMagic;
     }
 
     public void enableAttack() {
-	    attackPossible = true;
+        attackPossible = true;
     }
 }

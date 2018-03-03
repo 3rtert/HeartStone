@@ -13,8 +13,8 @@ public class Game {
     private int enemyPlayer; //1 - 0
 
 
-    int round = 0;
-    int leftMana;
+    private int round;
+    private int leftMana;
     private int playerWin = -1;
 
     void init(boolean withGui) {
@@ -34,6 +34,8 @@ public class Game {
 
         currentPlayer = 0;
         enemyPlayer = 1;
+        round = 0;
+
         if (withGui) {
             GUIInterface gui = new GUI();
             gui.setNumberOfCardsInDeck(PlayerNumber.ONE, 18);
@@ -48,6 +50,18 @@ public class Game {
         }
     }
 
+    public Game clone()
+    {
+        Game newGame=new Game();
+        newGame.player[0]=player[0].clone();
+        newGame.player[1]=player[1].clone();
+        newGame.currentPlayer=currentPlayer;
+        newGame.enemyPlayer=enemyPlayer;
+        newGame.round=round;
+        newGame.leftMana=leftMana;
+
+        return newGame;
+    }
     void start() throws IOException {
         while (playerWin == -1) {
             move();

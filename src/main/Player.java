@@ -17,7 +17,29 @@ public class Player
         cardsInHand = new ArrayList<>(20);
         stack = new Stack<>();
     }
+    protected Player clone()
+    {
+        /*Player newPlayer=new Player();
+        newPlayer.hp=hp;
+        for(int i=0;i<cardOnTable.size();i++)
+        {
+            if(cardOnTable[i]!=null)
+                newPlayer.cardOnTable[i]=cardOnTable[i].clone();
+        }
+        for(int i=0;i<cardsInHand.length;i++)
+        {
+            if(cardsInHand[i]!=null)
+                newPlayer.cardsInHand[i]=cardsInHand[i].clone();
+        }
+        for(int i=0;i<stack.length;i++)
+        {
+            if(stack[i]!=null)
+                newPlayer.stack[i]=stack[i].clone();
+        }
 
+        return newPlayer;*/
+        return null;
+    }
 	public void dealDmgToChamp(int dmg)
 	{
 		hp -= dmg;
@@ -89,7 +111,7 @@ public class Player
 				if(cards[nextCard]>0)
 				{
 					cards[nextCard]-=1;
-					stack.add(new Card(cost[nextCard],attack[nextCard],life[nextCard],numberOfMagic[nextCard]));
+					stack.add(new Card(cost[nextCard],attack[nextCard],life[nextCard],numberOfMagic[nextCard], true));
 					done=true;
 				}
 				else
