@@ -16,6 +16,19 @@ public class Game
 	int leftMana;
 	int playerWin=-1;
 	
+	protected Game clone()
+	{
+		Game newGame=new Game();
+		newGame.player[0]=player[0].clone();
+		newGame.player[1]=player[1].clone();
+		newGame.currentPlayer=currentPlayer;
+		newGame.enemy=enemy;
+		newGame.round=round;
+		newGame.leftMana=leftMana;
+		
+		return newGame;
+	}
+	
 	void init()
 	{
 		player[0]=new Player();
@@ -60,7 +73,7 @@ public class Game
 		player[currentPlayer].updateCardsAttak();
 		System.out.println("Podaj nastepny ruch: ");
 		// u1 - use card 1
-		// a1-2 - attak card 2 by card 1
+		// a1/2 - attak card 2 by card 1
 		// h1 - attak enemy by card 1
 		// e - end tour
 		
@@ -71,7 +84,7 @@ public class Game
 			textOfCard+=action[i];
 		}
 		
-		String[] textOfCards=textOfCard.split("-");
+		String[] textOfCards=textOfCard.split("/");
 		int[] numberOfCard= new int[textOfCard.length()];
 		
 		if(!textOfCards[0].equals(""))

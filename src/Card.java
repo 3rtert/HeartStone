@@ -18,6 +18,20 @@ public class Card
 	// 3 - deal 3 damage
 	// 4 - destroy random enemy minion
 	
+	protected Card clone()
+	{
+		return new Card(cost,attak,life,numberOfMagic,attakPossible);
+	}
+	
+	Card(int c, int a, int l, int magic, boolean attakPossible)
+	{
+		cost=c;
+		attak=a;
+		life=l;
+		numberOfMagic=magic;
+		this.attakPossible=attakPossible;
+	}
+	
 	Card(int c, int a, int l, int magic)
 	{
 		cost=c;

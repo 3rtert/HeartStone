@@ -9,6 +9,30 @@ public class Player
 	Card[] stack;
 	int indexOfNextCard=0;
 	
+	protected Player clone()
+	{
+		Player newPlayer=new Player();
+		newPlayer.hp=hp;
+		newPlayer.indexOfNextCard=indexOfNextCard;
+		for(int i=0;i<cardOnTable.length;i++)
+		{
+			if(cardOnTable[i]!=null)
+				newPlayer.cardOnTable[i]=cardOnTable[i].clone();
+		}
+		for(int i=0;i<cardsInHand.length;i++)
+		{
+			if(cardsInHand[i]!=null)
+				newPlayer.cardsInHand[i]=cardsInHand[i].clone();
+		}
+		for(int i=0;i<stack.length;i++)
+		{
+			if(stack[i]!=null)
+				newPlayer.stack[i]=stack[i].clone();
+		}
+		
+		return newPlayer;
+	}
+	
 	Player()
 	{
 		cardOnTable=new Card[7];
