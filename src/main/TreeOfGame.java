@@ -27,7 +27,6 @@ public class TreeOfGame {
     public ArrayList<ArrayList<Move>> combinationsCardOnTable(ArrayList<Move> moves) {
         ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
 
-
         for (long i = 1; i < Math.pow(2, moves.size()); i++) {
             ArrayList<Move> movesList = new ArrayList<>();
             int mana = currentGame.getCurrentPlayer().getMana();
