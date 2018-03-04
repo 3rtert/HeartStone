@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Player {
     private int hp = 20;
-    private int mana;
+    private int mana = 0;
     private int penaltyForEmptyDeck = 1;
 
     private ArrayList<Card> cardOnTable;
@@ -21,26 +21,26 @@ public class Player {
     }
 
     protected Player clone() {
-        /*Player newPlayer=new Player();
+
+        Player newPlayer=new Player();
+
         newPlayer.hp=hp;
+        newPlayer.mana = mana;
+        newPlayer.penaltyForEmptyDeck = penaltyForEmptyDeck;
         for(int i=0;i<cardOnTable.size();i++)
         {
-            if(cardOnTable[i]!=null)
-                newPlayer.cardOnTable[i]=cardOnTable[i].clone();
+            newPlayer.cardOnTable.add(cardOnTable.get(i).clone());
         }
-        for(int i=0;i<cardsInHand.length;i++)
+        for(int i=0;i<cardsInHand.size();i++)
         {
-            if(cardsInHand[i]!=null)
-                newPlayer.cardsInHand[i]=cardsInHand[i].clone();
+                newPlayer.cardsInHand.add(cardsInHand.get(i).clone());
         }
-        for(int i=0;i<stack.length;i++)
+        for(int i=0;i<stack.size();i++)
         {
-            if(stack[i]!=null)
-                newPlayer.stack[i]=stack[i].clone();
+                newPlayer.stack.add(stack.get(i).clone());
         }
 
-        return newPlayer;*/
-        return null;
+        return newPlayer;
     }
 
     public void dealDmgToChamp(int dmg) {

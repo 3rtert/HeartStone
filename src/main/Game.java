@@ -62,6 +62,7 @@ public class Game {
             if (this.withGui) {
                 refreshGui();
             }
+            possibleMoves();
             move();
         }
         System.out.println("Wygral gracz numer: " + playerWin);
@@ -73,6 +74,20 @@ public class Game {
         player[currentPlayer].updateMana(round);
         player[currentPlayer].getCard();
         player[currentPlayer].updateCardsAttack();
+    }
+    private void possibleMoves() {
+        TreeOfGame tree = new TreeOfGame(this);
+        ArrayList<ArrayList<Move>> moves = tree.getAllMoves();
+        if(!moves.isEmpty()) {
+            for (ArrayList<Move> fullMove : moves) {
+                System.out.println("Możliwy ruch wyciągnięcia karty:");
+                for(Move move: fullMove) {
+                    System.out.println(move);
+                }
+            }
+        } else {
+            System.out.println("No move");
+        }
     }
 
     void move() {
@@ -121,5 +136,13 @@ public class Game {
             gui.addCardToBattleField(pl, i, card);
         }
         gui.moveNotification(pl, index == currentPlayer);
+    }
+
+    public Player getCurrentPlayer() {
+        return player[currentPlayer];
+    }
+
+    public Player getEnemyPlayer() {
+        return player[enemyPlayer];
     }
 }

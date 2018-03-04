@@ -56,4 +56,19 @@ public class CardOnTableMove implements Move {
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Put card " + cardIndex + " on table";
+    }
+
+    @Override
+    public int getMoveCost(Player player) {
+        try {
+            return player.getCardInHand(cardIndex).getManaCost();
+        } catch (Exception e) {
+
+        }
+        return 0;
+    }
 }

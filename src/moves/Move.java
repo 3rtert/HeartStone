@@ -3,5 +3,7 @@ package moves;
 import main.Player;
 
 public interface Move {
-    public void perform(Player makingMovePlayer, Player enemyPlayer);
+    void perform(Player makingMovePlayer, Player enemyPlayer);
+    String toString();
+    int getMoveCost(Player player);
 }

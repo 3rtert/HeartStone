@@ -33,4 +33,18 @@ public class AttackCardMove implements Move {
             System.out.println("Problem with attack function: " + e.getMessage());
         }
     }
+
+    @Override
+    public String toString() {
+        if(indexOfAttackedCard == -1) {
+            return "Attack hero with card " + indexOfAttackingCard;
+        } else {
+            return "Attack card " + indexOfAttackedCard + " with card " + indexOfAttackingCard;
+        }
+    }
+
+    @Override
+    public int getMoveCost(Player player) {
+        return 0;
+    }
 }
