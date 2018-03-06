@@ -2,8 +2,11 @@ package moves;
 
 import main.Player;
 
+import java.util.ArrayList;
+
 public interface Move {
-    void perform(Player makingMovePlayer, Player enemyPlayer);
+    boolean perform(Player makingMovePlayer, Player enemyPlayer);
     String toString();
     int getMoveCost(Player player);
+    Move getEnemyMoves();
 }

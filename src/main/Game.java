@@ -24,13 +24,15 @@ public class Game {
         player[0] = new Player();
         player[1] = new Player();
 
-        player[0].createRandomDeck();
+        //player[0].createRandomDeck();
+        player[0].createTestDeck();
         player[0].getCardFromDeck();
         player[0].getCardFromDeck();
         player[0].getCardFromDeck();
 
+        player[1].createTestDeck();
 
-        player[1].createRandomDeck();
+        //player[1].createRandomDeck();
         player[1].getCardFromDeck();
         player[1].getCardFromDeck();
         player[1].getCardFromDeck();
@@ -78,16 +80,7 @@ public class Game {
     private void possibleMoves() {
         TreeOfGame tree = new TreeOfGame(this);
         ArrayList<ArrayList<Move>> moves = tree.getAllMoves();
-        if(!moves.isEmpty()) {
-            for (ArrayList<Move> fullMove : moves) {
-                System.out.println("Możliwy ruch wyciągnięcia karty:");
-                for(Move move: fullMove) {
-                    System.out.println(move);
-                }
-            }
-        } else {
-            System.out.println("No move");
-        }
+        System.out.println("Number of possible moves: " + moves.size());
     }
 
     void move() {
@@ -100,8 +93,18 @@ public class Game {
                 break;
             }
         }
-
+        player[currentPlayer].clearBoard();
+        player[enemyPlayer].clearBoard();
         endTour();
+    }
+
+    public boolean performMoves(ArrayList<Move> moves) {
+        for(Move move: moves) {
+            if(!move.perform(player[currentPlayer], player[enemyPlayer])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void nextRound() {

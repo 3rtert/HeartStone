@@ -53,12 +53,19 @@ public class Player {
 
     public boolean dealDmgToCard(int indexOfCard, int dmg) {
         Card card = cardOnTable.get(indexOfCard);
-        card.dealDmg(dmg);
-        if (card.isCardDestroyed()) {
-            cardOnTable.remove(indexOfCard);
-            return false;
+        if(card.getLife() > 0) {
+            card.dealDmg(dmg);
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public void clearBoard() {
+        for(Card card: cardOnTable) {
+            if (card.isCardDestroyed()) {
+                cardOnTable.remove(card);
+            }
+        }
     }
 
     public void dealDmgToAllCards(int dmg) {
@@ -126,6 +133,22 @@ public class Player {
                         nextCard = 0;
                 }
             }
+        }
+    }
+
+    public void createTestDeck() {
+        //int[] cost = {10, 8, 6, 5, 3, 2, 2, 2, 2, 3};
+        //int[] attack = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] life = {2, 1, 2, 2, 1, 1, 1, 2, 1, 1};
+
+        int[] numberOfMagic = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        boolean[] magicCards = {false, false, false, false, false, false, false, false, false, false};
+        int[] cards = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+
+            stack.add(new Card(1, 1, life[i%10], -1, false, true));
+
         }
     }
 

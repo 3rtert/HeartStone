@@ -12,7 +12,7 @@ public class CardOnTableMove implements Move {
     }
 
     @Override
-    public void perform(Player makingMovePlayer, Player enemyPlayer) {
+    public boolean perform(Player makingMovePlayer, Player enemyPlayer) {
         try {
             Card card = makingMovePlayer.getCardInHand(cardIndex);
             if (makingMovePlayer.getMana() >= card.getManaCost()) {
@@ -30,6 +30,7 @@ public class CardOnTableMove implements Move {
         } catch (Exception e) {
             System.out.println("Problem with use card function: " + e.getMessage());
         }
+        return true;
     }
 
     private void useMagic(Player makingMovePlayer, Player enemyPlayer, int numberOfMagic) {
@@ -70,5 +71,10 @@ public class CardOnTableMove implements Move {
 
         }
         return 0;
+    }
+
+    @Override
+    public Move getEnemyMoves() {
+        return null;
     }
 }
