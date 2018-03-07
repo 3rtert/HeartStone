@@ -53,11 +53,11 @@ public class SpoonPlayer implements PlayerSIInterface
 		tempGame.performMoves(fullMove);
 		int rate=0;
 		if(numberOfIntelligence==2)
-			rate=100*evaluateAgressive(tempGame)+evaluateAgressive(tempGame);
+			rate=100*evaluateAgressive(tempGame)+evaluateDefensive(tempGame);
 		else if(numberOfIntelligence==3)
-			rate=evaluateAgressive(tempGame)+evaluateAgressive(tempGame)*100;
+			rate=evaluateAgressive(tempGame)+evaluateDefensive(tempGame)*100;
 		else if(numberOfIntelligence==4)
-			rate=evaluateAgressive(tempGame)+evaluateAgressive(tempGame);
+			rate=evaluateAgressive(tempGame)+evaluateDefensive(tempGame);
 		return rate;
 	}
 	
