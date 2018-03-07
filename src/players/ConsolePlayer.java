@@ -12,7 +12,7 @@ import moves.Move;
 
 public class ConsolePlayer implements PlayerSIInterface {
     @Override
-    public void init(Game currentGame) {
+    public void init(Game currentGame, int numberOfIntelligence) {
 
     }
 
