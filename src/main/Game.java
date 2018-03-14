@@ -58,6 +58,20 @@ public class Game {
 
         return newGame;
     }
+    
+    int simulate() // return number of player who won
+    {
+    	initializeMove();
+    	
+    	
+    	ArrayList<Move> moves=null;
+    	
+    	
+    	
+    	performMoves(moves);
+    	return playerWin == -1 ? simulate() : playerWin;
+    }
+    
     void start() {
         while (playerWin == -1) {
             initializeMove();
