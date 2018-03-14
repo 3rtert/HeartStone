@@ -19,6 +19,7 @@ public class CardOnTableMove implements Move {
                 makingMovePlayer.setMana(makingMovePlayer.getMana() - card.getManaCost());
                 if(card.isMagicCard()) {
                     useMagic(makingMovePlayer, enemyPlayer, card.getNumberOfMagic());
+                    makingMovePlayer.destroyCardInHand(cardIndex);
                 } else {
                     makingMovePlayer.putCardOnTable(cardIndex);
                     if (card.getNumberOfMagic() != -1) {

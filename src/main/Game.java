@@ -24,15 +24,14 @@ public class Game {
         player[0] = new Player();
         player[1] = new Player();
 
-        //player[0].createRandomDeck();
-        player[0].createTestDeck();
+        player[0].createRandomDeck();
+        //player[0].createTestDeck();
         player[0].getCardFromDeck();
         player[0].getCardFromDeck();
         player[0].getCardFromDeck();
 
-        player[1].createTestDeck();
-
-        //player[1].createRandomDeck();
+        //player[1].createTestDeck();
+        player[1].createRandomDeck();
         player[1].getCardFromDeck();
         player[1].getCardFromDeck();
         player[1].getCardFromDeck();
