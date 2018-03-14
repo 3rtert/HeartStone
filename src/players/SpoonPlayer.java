@@ -53,11 +53,11 @@ public class SpoonPlayer implements PlayerSIInterface
 		tempGame.performMoves(fullMove);
 		int rate=0;
 		if(numberOfIntelligence==2)
-			rate=evaluateAgressive(tempGame);
+			rate=100*evaluateAgressive(tempGame)+evaluateDefensive(tempGame);
 		else if(numberOfIntelligence==3)
-			rate=evaluateDefensive(tempGame);
+			rate=evaluateAgressive(tempGame)+evaluateDefensive(tempGame)*100;
 		else if(numberOfIntelligence==4)
-			rate=evaluateAgrAndDef(tempGame);
+			rate=evaluateAgressive(tempGame)+evaluateDefensive(tempGame);
 		return rate;
 	}
 	
@@ -83,10 +83,5 @@ public class SpoonPlayer implements PlayerSIInterface
 			rate+=card.getLife()+card.getAttack();
 		}
 		return rate;
-	}
-	
-	private int evaluateAgrAndDef(Game game)
-	{
-		return evaluateAgressive(game) + evaluateDefensive(game);
 	}
 }
