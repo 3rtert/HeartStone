@@ -13,7 +13,43 @@ public class TreeOfGame {
     private Game currentGame;
     int wins = 0;
     int loses = 0;
+    int simulacions = 0;
 
+    
+    private TreeOfGame expansion()
+    {
+    	if(moves==null)
+    		getAllMoves();
+    	ArrayList<Move> currnetMove = (ArrayList<Move>)moves.remove(0);
+    	trees.add(new TreeOfGame(currentGame))
+    	((TreeOfGame)trees.get(trees.size()-1)).currentGame.performMoves(currnetMove);
+    	return ((TreeOfGame)trees.get(trees.size()-1));
+    }
+    
+    private TreeOfGame selection()
+    {
+    	if(moves==null || moves.isEmpty() || trees.isEmpty())
+    	{
+    		return this;
+    	}
+    	else
+    	{
+    		TreeOfGame current=null;
+    		double rate=0;
+    		for(int i=0;i<trees.size();i++)
+    		{
+    			double tempRate = wins/simulacions+Math.sqrt(2*Math.log1p(((TreeOfGame)(trees.get(i))).simulacions)/simulacions);
+    			if(tempRate>rate)
+    			{
+    				rate = tempRate;
+    				current = (TreeOfGame)trees.get(i);
+    			}
+    		}
+    		return current;
+    	}
+    }
+    
+    
     public TreeOfGame(Game game) {
         currentGame = game.clone();
     }
