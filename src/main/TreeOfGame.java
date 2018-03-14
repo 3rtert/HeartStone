@@ -9,6 +9,7 @@ import java.util.List;
 
 public class TreeOfGame {
     List trees = new ArrayList<TreeOfGame>();
+    ArrayList<ArrayList<Move>> moves;
     private Game currentGame;
     int wins = 0;
     int loses = 0;
@@ -34,6 +35,7 @@ public class TreeOfGame {
         }
         output.addAll(possibleMovesCardAttacks);
         output.addAll(possibleMovesCardOnTable);
+        moves = output;
         return output;
     }
 
