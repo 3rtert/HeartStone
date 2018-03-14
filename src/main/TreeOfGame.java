@@ -21,7 +21,7 @@ public class TreeOfGame {
     	if(moves==null)
     		getAllMoves();
     	ArrayList<Move> currnetMove = (ArrayList<Move>)moves.remove(0);
-    	trees.add(new TreeOfGame(currentGame))
+    	trees.add(new TreeOfGame(currentGame));
     	((TreeOfGame)trees.get(trees.size()-1)).currentGame.performMoves(currnetMove);
     	return ((TreeOfGame)trees.get(trees.size()-1));
     }
