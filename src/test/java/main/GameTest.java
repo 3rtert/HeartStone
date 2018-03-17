@@ -1,11 +1,9 @@
-package tests;
+package main;
 
 import main.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import main.Player;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 

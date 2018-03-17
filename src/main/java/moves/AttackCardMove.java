@@ -3,8 +3,6 @@ package moves;
 import main.Card;
 import main.Player;
 
-import java.util.ArrayList;
-
 public class AttackCardMove implements Move {
 
     private int indexOfAttackingCard;

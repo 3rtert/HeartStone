@@ -1,4 +1,4 @@
-package tests;
+package main;
 
 import main.Card;
 import org.junit.jupiter.api.BeforeEach;

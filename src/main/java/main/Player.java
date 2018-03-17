@@ -9,38 +9,49 @@ public class Player {
     private int mana = 0;
     private int penaltyForEmptyDeck = 1;
 
-    private ArrayList<Card> cardOnTable;
-    private ArrayList<Card> cardsInHand;
+    private ArrayList<Card> cardOnTable = new ArrayList<>(Constants.NUMBER_OF_CARDS_ON_TABLE);
+    private ArrayList<Card> cardsInHand = new ArrayList<>(20);
 
-    private Stack<Card> stack;
+    private Stack<Card> stack = new Stack<>();
 
-    public Player() {
-        cardOnTable = new ArrayList<>(Constants.NUMBER_OF_CARDS_ON_TABLE);
-        cardsInHand = new ArrayList<>(20);
-        stack = new Stack<>();
+    public void init(boolean starting) {
+        createRandomDeck();//createTestDeck();
+
+        getCardFromDeck();
+        getCardFromDeck();
+        getCardFromDeck();
+
+        if (!starting) {
+            getCardFromDeck();
+        }
     }
 
     protected Player clone() {
 
-        Player newPlayer=new Player();
+        Player newPlayer = new Player();
 
-        newPlayer.hp=hp;
+        newPlayer.hp = hp;
         newPlayer.mana = mana;
         newPlayer.penaltyForEmptyDeck = penaltyForEmptyDeck;
-        for(int i=0;i<cardOnTable.size();i++)
-        {
+        for (int i = 0; i < cardOnTable.size(); i++) {
             newPlayer.cardOnTable.add(cardOnTable.get(i).clone());
         }
-        for(int i=0;i<cardsInHand.size();i++)
-        {
-                newPlayer.cardsInHand.add(cardsInHand.get(i).clone());
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            newPlayer.cardsInHand.add(cardsInHand.get(i).clone());
         }
-        for(int i=0;i<stack.size();i++)
-        {
-                newPlayer.stack.add(stack.get(i).clone());
+        for (int i = 0; i < stack.size(); i++) {
+            newPlayer.stack.add(stack.get(i).clone());
         }
 
         return newPlayer;
+    }
+
+    public ArrayList<Card> getCardsOnTableCopy() {
+        ArrayList<Card> cards = new ArrayList<>();
+        for (int i = 0; i < cardOnTable.size(); i++) {
+            cards.add(cardOnTable.get(i).clone());
+        }
+        return cards;
     }
 
     public void dealDmgToChamp(int dmg) {
@@ -53,7 +64,7 @@ public class Player {
 
     public boolean dealDmgToCard(int indexOfCard, int dmg) {
         Card card = cardOnTable.get(indexOfCard);
-        if(card.getLife() > 0) {
+        if (card.getLife() > 0) {
             card.dealDmg(dmg);
             return true;
         }
@@ -61,7 +72,7 @@ public class Player {
     }
 
     public void clearBoard() {
-        for(Card card: cardOnTable) {
+        for (Card card : cardOnTable) {
             if (card.isCardDestroyed()) {
                 cardOnTable.remove(card);
             }
@@ -69,7 +80,7 @@ public class Player {
     }
 
     public void dealDmgToAllCards(int dmg) {
-        for(int i = 0; i < cardOnTable.size(); i++) {
+        for (int i = 0; i < cardOnTable.size(); i++) {
             dealDmgToCard(i, dmg);
         }
     }
@@ -93,7 +104,7 @@ public class Player {
             Card card = getCardInHand(index);
             cardOnTable.add(card);
             cardsInHand.remove(index);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("put card on table problem" + e.getMessage());
         }
     }
@@ -147,7 +158,7 @@ public class Player {
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
 
-            stack.add(new Card(1, 1, life[i%10], -1, false, true));
+            stack.add(new Card(1, 1, life[i % 10], -1, false, true));
 
         }
     }
@@ -183,6 +194,7 @@ public class Player {
     public int getNumberOfCardsOnTable() {
         return cardOnTable.size();
     }
+
     //for testing
     public void addCardToDeck(Card card) {
         stack.add(card);

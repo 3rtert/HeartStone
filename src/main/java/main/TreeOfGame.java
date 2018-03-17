@@ -1,11 +1,10 @@
 package main;
 
-import moves.AttackCardMove;
-import moves.CardOnTableMove;
-import moves.Move;
+import moves.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TreeOfGame {
     List trees = new ArrayList<TreeOfGame>();
@@ -108,6 +107,7 @@ public class TreeOfGame {
                 }
             }
             //TODO for each permutation
+
             Game gameClone = currentGame.clone();
             if(gameClone.performMoves(movesList)) {
                 combinationList.add(movesList);
@@ -115,5 +115,59 @@ public class TreeOfGame {
         }
         return combinationList;
 
+    }
+
+    public ArrayList<Move> getRandomMove() {
+        ArrayList<Move> toPerformMoves = new ArrayList<>();
+
+        ArrayList<Move> moves = getAllPossibleCardOnTableMoves();
+        Random random = new Random();
+        int cardsInHand = currentGame.getCurrentPlayer().getNumberOfCardsInHand();
+        int numberOfMoves = random.nextInt(cardsInHand + 1);
+
+        for(int i = 0; i < numberOfMoves; i++) {
+            int cardIndex = random.nextInt(moves.size());
+            Move move = moves.get(cardIndex);
+            toPerformMoves.add(move);
+            moves.remove(move);
+        }
+
+        int cardsOnTable = currentGame.getCurrentPlayer().getNumberOfCardsOnTable();
+        int numberOfAttack = random.nextInt(cardsOnTable + 1);
+
+        ArrayList<Card> myCards = currentGame.getCurrentPlayer().getCardsOnTableCopy();
+        ArrayList<Card> enemyCards = currentGame.getEnemyPlayer().getCardsOnTableCopy();
+
+        int numberOfMyDestroyedCards = 0;
+        int numberOfEnemyDestroyedCards = 0;
+
+        for(int i = 0; i < numberOfAttack; i++) {
+            int myCardIndex = random.nextInt(myCards.size());
+            int typeOfAttack = random.nextInt(2);
+
+            if(typeOfAttack == 0) {
+                toPerformMoves.add(new AttackCardMove(myCardIndex + i, -1));
+                myCards.remove(myCardIndex);
+            } else {
+                int enemyCardIndex = random.nextInt(enemyCards.size());
+                Card attackedCard = enemyCards.get(enemyCardIndex);
+                Card card = myCards.get(myCardIndex);
+                attackedCard.dealDmg(card.getAttack());
+                if(attackedCard.isCardDestroyed()) {
+                    enemyCards.remove(attackedCard);
+                    numberOfEnemyDestroyedCards++;
+                } else {
+                    card.dealDmg(attackedCard.getAttack());
+                    if(card.isCardDestroyed()) {
+                        myCards.remove(card);
+                        numberOfMyDestroyedCards++;
+                    }
+                }
+                toPerformMoves.add(new AttackCardMove(myCardIndex + numberOfMyDestroyedCards,
+                        enemyCardIndex + numberOfEnemyDestroyedCards));
+            }
+        }
+
+        return toPerformMoves;
     }
 }
