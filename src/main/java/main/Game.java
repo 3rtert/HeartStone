@@ -64,6 +64,11 @@ public class Game {
         player[currentPlayer].getCard();
         player[currentPlayer].updateCardsAttack();
     }
+    public void initializeMove(boolean random) {
+        player[currentPlayer].updateMana(round);
+        player[currentPlayer].getRandomCard();
+        player[currentPlayer].updateCardsAttack();
+    }
 
     public void move() {
         ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(100);

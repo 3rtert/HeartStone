@@ -71,6 +71,7 @@ public class TreeOfGame {
     
     private TreeOfGame expansion()
     {
+    	currentGame.initializeMove(true);
     	if(moves==null)
     		getAllMoves();
     	ArrayList<Move> currentMove = (ArrayList<Move>)moves.remove(0);
