@@ -15,6 +15,37 @@ public class TreeOfGame {
     int simulacions = 0;
 
     
+    
+    private int mcts(int player)
+    {
+    	TreeOfGame currentTree;
+    	if((currentTree = selection()) == this)
+    	{
+    		int winner = simulate(expansion().currentGame.clone());
+    		int result = (winner == player) ? 1 : 0 ;
+    		wins += result;
+    		simulacions++;
+    		return result;
+    	}
+    	else
+    	{
+    		int result = currentTree.mcts(player);
+    		wins += result;
+    		simulacions++;
+    		return result;
+    	}
+    }
+    
+    int simulate(Game tempGame) // return number of player who won
+    {
+    	tempGame.initializeMove();
+        ArrayList<Move> moves=(new TreeOfGame(tempGame)).getRandomMove();
+        tempGame.performMoves(moves);
+        tempGame.nextRound();
+        tempGame.endTour();
+        return tempGame.getPlayerWin() == -1 ? simulate(tempGame) : tempGame.getPlayerWin();
+    }
+    
     private TreeOfGame expansion()
     {
     	if(moves==null)
