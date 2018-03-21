@@ -121,6 +121,10 @@ public class Game {
         gui.moveNotification(pl, index == currentPlayer);
     }
 
+    public int getCurrentPLayerId()
+    {
+    	return currentPlayer;
+    }
     public Player getCurrentPlayer() {
         return player[currentPlayer];
     }

@@ -30,7 +30,7 @@ public class SpoonPlayer implements PlayerSIInterface
 	}
 
 	@Override
-	public ArrayList<Move> calculateNextMove(int maxTime)
+	public ArrayList<Move> calculateNextMove(long maxTime)
 	{
 		ArrayList<ArrayList<Move>> allMoves = treeOfGame.getAllMoves();
 		int bestMoveScore=0;

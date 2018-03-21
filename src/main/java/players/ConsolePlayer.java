@@ -22,7 +22,7 @@ public class ConsolePlayer implements PlayerSIInterface {
     }
 
     @Override
-    public ArrayList<Move> calculateNextMove(int maxTime) {
+    public ArrayList<Move> calculateNextMove(long maxTime) {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         ArrayList<Move> moves = new ArrayList<>();
         // u-1 - use card 1

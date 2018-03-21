@@ -8,15 +8,38 @@ import java.util.Random;
 
 public class TreeOfGame {
     List trees = new ArrayList<TreeOfGame>();
+    ArrayList<Move> previousMove;
     ArrayList<ArrayList<Move>> moves;
     private Game currentGame;
     int wins = 0;
     int loses = 0;
     int simulacions = 0;
 
+    public ArrayList<Move> calculateBestMove(long maxTime, int player)
+    {
+    	long startTime = System.currentTimeMillis();
+    	while(startTime + maxTime > System.currentTimeMillis())
+    		mcts(player);
+    	return getBestMove();
+    }
     
-    
-    private int mcts(int player)
+    private ArrayList<Move> getBestMove() 
+    {
+    	ArrayList<Move> bestMove=null;
+		double rate=0;
+		for(int i=0;i<trees.size();i++)
+		{
+			double tempRate = wins/simulacions;
+			if(tempRate>rate)
+			{
+				rate = tempRate;
+				bestMove = ((TreeOfGame)trees.get(i)).previousMove;
+			}
+		}
+		return bestMove;
+	}
+
+	private int mcts(int player)
     {
     	TreeOfGame currentTree;
     	if((currentTree = selection()) == this)
@@ -50,9 +73,10 @@ public class TreeOfGame {
     {
     	if(moves==null)
     		getAllMoves();
-    	ArrayList<Move> currnetMove = (ArrayList<Move>)moves.remove(0);
+    	ArrayList<Move> currentMove = (ArrayList<Move>)moves.remove(0);
     	trees.add(new TreeOfGame(currentGame));
-    	((TreeOfGame)trees.get(trees.size()-1)).currentGame.performMoves(currnetMove);
+    	((TreeOfGame)trees.get(trees.size()-1)).previousMove=currentMove;
+    	((TreeOfGame)trees.get(trees.size()-1)).currentGame.performMoves(currentMove);
     	return ((TreeOfGame)trees.get(trees.size()-1));
     }
     

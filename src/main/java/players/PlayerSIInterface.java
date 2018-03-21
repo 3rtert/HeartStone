@@ -15,5 +15,5 @@ public interface PlayerSIInterface
 	//4 - ...
 	
 	String getNextMove(); // return for example: a1/2
-	ArrayList<Move> calculateNextMove(int maxTime); // calculate no longer than maxTime (milliseconds)
+	ArrayList<Move> calculateNextMove(long maxTime); // calculate no longer than maxTime (milliseconds)
 }
