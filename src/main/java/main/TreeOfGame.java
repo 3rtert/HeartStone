@@ -168,8 +168,6 @@ public class TreeOfGame {
                 moves.add(new CardOnTableMove(i));
             }
         }
-
-
         return moves;
     }
 

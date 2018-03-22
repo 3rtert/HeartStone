@@ -10,4 +10,5 @@ public interface GUIInterface {
     void addCardToBattleField(PlayerNumber player, int index, Card card);
     void clearCards(PlayerNumber player);
     void moveNotification(PlayerNumber player, boolean set);
+    void addMagicCard(PlayerNumber player, int index, Card card);
 }

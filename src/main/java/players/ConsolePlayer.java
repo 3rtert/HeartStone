@@ -11,18 +11,9 @@ import moves.CardOnTableMove;
 import moves.Move;
 
 public class ConsolePlayer implements PlayerSIInterface {
-    @Override
-    public void init(Game currentGame, int numberOfIntelligence) {
-
-    }
 
     @Override
-    public String getNextMove() {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Move> calculateNextMove(long maxTime) {
+    public ArrayList<Move> calculateNextMove(Game game, long maxTime) {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         ArrayList<Move> moves = new ArrayList<>();
         // u-1 - use card 1

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface PlayerSIInterface
 {
-	void init(Game currentGame, int numberOfIntelligence); 
+	//void init(Game currentGame, int numberOfIntelligence);
 	//numberOfIntelligence:
 	//0 - consolePLayer (no inteligance)
 	//1 - intelligence player (WIP)
@@ -14,6 +14,6 @@ public interface PlayerSIInterface
 	//3 - deff player
 	//4 - ...
 	
-	String getNextMove(); // return for example: a1/2
-	ArrayList<Move> calculateNextMove(long maxTime); // calculate no longer than maxTime (milliseconds)
+	//String getNextMove(); // return for example: a1/2
+	ArrayList<Move> calculateNextMove(Game currentGame, long maxTime); // calculate no longer than maxTime (milliseconds)
 }

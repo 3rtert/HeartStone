@@ -14,9 +14,9 @@ public class PlayerGUIStatFields {
     public static final int NR_CARDS_DECK_INDEX = 9;
     public static final int AMOUNT_OF_MANA_INDEX = 0;
     public static final int NAME_INDEX = 5;
-    public static final int MOVE_NOTIFICATION = 6;
+    public static final int MOVE_NOTIFICATION = 5;
     public static final int LIFE_POINT_NUMBER_INDEX = 4;
-
+    public int magicCardsIdx[] = {6,7,8,4,3,2};
     private ArrayList<JLabel> cardsInHand = new ArrayList<>();
 
     private ArrayList<JLabel> fields = new ArrayList<>();
@@ -92,9 +92,17 @@ public class PlayerGUIStatFields {
         for(JLabel label: battleFields) {
             label.setText("");
         }
+
+        for(int i = 0; i < magicCardsIdx.length; i++) {
+            fields.get(magicCardsIdx[i]).setText("");
+        }
     }
 
     public void moveNotification(boolean set) {
-        fields.get(MOVE_NOTIFICATION).setText(set ? "Your move" : "");
+        fields.get(MOVE_NOTIFICATION).setBackground(set ? Color.GREEN : Color.RED);
+    }
+
+    public void addMagicCard(int index, Card card) {
+        fields.get(magicCardsIdx[index]).setText(card.toString());
     }
 }

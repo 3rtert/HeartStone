@@ -19,6 +19,7 @@ public class CardOnTableMove implements Move {
                 makingMovePlayer.setMana(makingMovePlayer.getMana() - card.getManaCost());
                 if(card.isMagicCard()) {
                     useMagic(makingMovePlayer, enemyPlayer, card.getNumberOfMagic());
+                    makingMovePlayer.useMagicCard(cardIndex);
                     makingMovePlayer.destroyCardInHand(cardIndex);
                 } else {
                     makingMovePlayer.putCardOnTable(cardIndex);
@@ -30,6 +31,7 @@ public class CardOnTableMove implements Move {
             }
         } catch (Exception e) {
             System.out.println("Problem with use card function: " + e.getMessage());
+            e.printStackTrace();
         }
         return true;
     }

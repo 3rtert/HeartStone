@@ -4,7 +4,9 @@ import GUI.*;
 
 import moves.Move;
 import players.ConsolePlayer;
+import players.MCTSPlayer;
 import players.PlayerSIInterface;
+import players.SpoonPlayer;
 
 import java.util.ArrayList;
 
@@ -54,6 +56,14 @@ public class Game {
         switch (player) {
             case "console":
                 return new ConsolePlayer();
+            case "aggressive":
+                return new SpoonPlayer(2);
+            case "defensive":
+                return new SpoonPlayer(3);
+            case "mixed":
+                return new SpoonPlayer(4);
+            case "mcts":
+                return new MCTSPlayer();
             default:
                 return null;
         }
@@ -63,10 +73,11 @@ public class Game {
         player[currentPlayer].updateMana(round);
         player[currentPlayer].getCard();
         player[currentPlayer].updateCardsAttack();
+        player[currentPlayer].clearAllMagicCards();
     }
 
     public void move() {
-        ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(100);
+        ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, 100);
         for (Move move : moves) {
             move.perform(player[currentPlayer], player[enemyPlayer]);
             if (player[enemyPlayer].isChampDestroyed()) {
@@ -74,10 +85,12 @@ public class Game {
                 break;
             }
         }
+        clearArrays();
+    }
+    public void clearArrays() {
         player[currentPlayer].clearBoard();
         player[enemyPlayer].clearBoard();
     }
-
     public boolean performMoves(ArrayList<Move> moves) {
         for (Move move : moves) {
             if (!move.perform(player[currentPlayer], player[enemyPlayer])) {

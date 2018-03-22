@@ -84,4 +84,8 @@ public class GUI extends JFrame implements GUIInterface {
     public void moveNotification(PlayerNumber player, boolean set) {
         players.get(player).moveNotification(set);
     }
+
+    public void addMagicCard(PlayerNumber player, int index, Card card){
+        players.get(player).addMagicCard(index, card);
+    };
 }

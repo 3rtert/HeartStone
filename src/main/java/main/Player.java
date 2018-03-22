@@ -11,6 +11,7 @@ public class Player {
 
     private ArrayList<Card> cardOnTable = new ArrayList<>(Constants.NUMBER_OF_CARDS_ON_TABLE);
     private ArrayList<Card> cardsInHand = new ArrayList<>(20);
+    private ArrayList<Card> magicCardsUsed = new ArrayList<>();
 
     private Stack<Card> stack = new Stack<>();
 
@@ -43,9 +44,19 @@ public class Player {
             newPlayer.stack.add(stack.get(i).clone());
         }
 
+        for (int i = 0; i < magicCardsUsed.size(); i++) {
+            newPlayer.magicCardsUsed.add(magicCardsUsed.get(i).clone());
+        }
         return newPlayer;
     }
 
+    public void useMagicCard(int index) {
+        magicCardsUsed.add(cardsInHand.get(index));
+    }
+
+    public void clearAllMagicCards() {
+        magicCardsUsed = new ArrayList<>();
+    }
     public ArrayList<Card> getCardsOnTableCopy() {
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = 0; i < cardOnTable.size(); i++) {
