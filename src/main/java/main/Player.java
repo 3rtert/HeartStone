@@ -124,6 +124,12 @@ public class Player {
         cardsInHand.add(stack.pop());
     }
 
+    public Card getRadomCardFromDeck()
+    {
+    	Random generator = new Random();
+    	return cardsInHand.add(stack.get(generator.nextInt(stack.size())));
+    }
+    
     //change to collection.shuffle??
     public void createRandomDeck() {
         int[] cost = {10, 8, 6, 5, 3, 2, 2, 2, 2, 3};

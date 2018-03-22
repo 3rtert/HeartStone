@@ -75,6 +75,11 @@ public class Game {
         player[currentPlayer].updateCardsAttack();
         player[currentPlayer].clearAllMagicCards();
     }
+    public void initializeMove(boolean random) {
+        player[currentPlayer].updateMana(round);
+        player[currentPlayer].getRandomCard();
+        player[currentPlayer].updateCardsAttack();
+    }
 
     public void move() {
         ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, 100);
