@@ -191,8 +191,6 @@ public class TreeOfGame {
 
         ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
 
-        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
-
         for (long i = 1; i < Math.pow(2, moves.size()); i++) {
             ArrayList<Move> movesList = new ArrayList<>();
             for (int j = 0; j < moves.size(); j++) {
@@ -204,7 +202,7 @@ public class TreeOfGame {
 
             Game gameClone = currentGame.clone();
             if (gameClone.performMoves(movesList)) {
-
+                Card[] cardsOnTable = gameClone.getCurrentPlayer().getCardsOnTable();
                 for (int ind = 0; ind < cardsOnTable.length; ind++) {
                     if(cardsOnTable[ind] != null && cardsOnTable[ind].canCardAttack()) {
                         movesList.add(new AttackCardMove(ind, -1)); // add attack on hero
@@ -214,12 +212,16 @@ public class TreeOfGame {
                 combinationList.add(movesList);
             }
         }
-
+        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
         ArrayList<Move> onlyHeroAttackMoves = new ArrayList<>();
         for (int ind = 0; ind < cardsOnTable.length; ind++) {
-            onlyHeroAttackMoves.add(new AttackCardMove(ind, -1)); // add attack on hero
+            if(cardsOnTable[ind] != null) {
+                onlyHeroAttackMoves.add(new AttackCardMove(ind, -1)); // add attack on hero
+            }
         }
-        combinationList.add(onlyHeroAttackMoves);
+        if(!onlyHeroAttackMoves.isEmpty()) {
+            combinationList.add(onlyHeroAttackMoves);
+        }
 
         return combinationList;
 

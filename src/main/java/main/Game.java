@@ -79,7 +79,9 @@ public class Game {
 
     public void move(int maxTime) {
         ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, maxTime);
+        System.out.println("Best move:");
         for (Move move : moves) {
+            System.out.println(move);
             move.perform(player[currentPlayer], player[enemyPlayer]);
             if (player[enemyPlayer].isChampDestroyed()) {
                 playerWin = currentPlayer;

@@ -93,7 +93,9 @@ public class Player {
 
     public void dealDmgToAllCards(int dmg) {
         for (int i = 0; i < cardsOnTable.length; i++) {
-            dealDmgToCard(i, dmg);
+            if(cardsOnTable[i] != null) {
+                dealDmgToCard(i, dmg);
+            }
         }
     }
 
@@ -108,7 +110,9 @@ public class Player {
 
     public void updateCardsAttack() {
         for (Card card : cardsOnTable) {
-            card.enableAttack();
+            if(card != null) {
+                card.enableAttack();
+            }
         }
     }
 

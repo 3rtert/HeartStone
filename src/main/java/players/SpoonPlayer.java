@@ -27,7 +27,7 @@ public class SpoonPlayer implements PlayerSIInterface
 	{
 		TreeOfGame treeOfGame=new TreeOfGame(currentGame);
 		ArrayList<ArrayList<Move>> allMoves = treeOfGame.getAllMoves();
-
+        System.out.println("Possible moves: " + allMoves.size());
 		int bestMoveScore=0;
 		ArrayList<Move> bestMove=new ArrayList<Move>();
 		for(ArrayList<Move> move : allMoves)
@@ -36,14 +36,21 @@ public class SpoonPlayer implements PlayerSIInterface
 		    for(Move singleMove : move) {
                 System.out.print(singleMove);
             }
-            System.out.println("");
+
 			int currentMoveScore = evaluate(currentGame, move);
-			if(currentMoveScore>bestMoveScore)
+		    System.out.print(" Score: " + currentMoveScore);
+			System.out.println("");
+
+			if(currentMoveScore>bestMoveScore || bestMoveScore == 0)
 			{
 				bestMoveScore=currentMoveScore;
 				bestMove=move;
 			}
 		}
+        System.out.print("Best move in function:");
+        for(Move singleMove : bestMove) {
+            System.out.print(singleMove);
+        }
 		return bestMove;
 	}
 	
@@ -70,7 +77,9 @@ public class SpoonPlayer implements PlayerSIInterface
 		rate-=3*enemy.getHealth();
 		for(Card card : enemy.getCardsOnTable())
 		{
-			rate-=card.getLife()+card.getAttack();
+		    if(card != null) {
+                rate -= card.getLife() + card.getAttack();
+            }
 		}
 		return rate;
 	}
@@ -82,7 +91,9 @@ public class SpoonPlayer implements PlayerSIInterface
 		rate+=3*currentPlayer.getHealth();
 		for(Card card : currentPlayer.getCardsOnTable())
 		{
-			rate+=card.getLife()+card.getAttack();
+		    if(card != null) {
+                rate += card.getLife() + card.getAttack();
+            }
 		}
 		return rate;
 	}

@@ -96,7 +96,7 @@ public class GUI extends JFrame implements GUIInterface {
         refreshGuiForPlayer(game.getPlayer(1), PlayerNumber.TWO);
 
         moveNotification(PlayerNumber.ONE, game.getCurrentPLayerId() == 0);
-        moveNotification(PlayerNumber.TWO, game.getCurrentPLayerId() == 0);
+        moveNotification(PlayerNumber.TWO, game.getCurrentPLayerId() == 1);
     }
 
     private void refreshGuiForPlayer(Player player, PlayerNumber pl) {
@@ -107,12 +107,16 @@ public class GUI extends JFrame implements GUIInterface {
         clearCards(pl);
         Card[] cards = player.getCardsInHand();
         for (int i = 0; i < cards.length; i++) {
-            addCardToPlayersHand(pl, i, cards[i]);
+            if(cards[i] != null) {
+                addCardToPlayersHand(pl, i, cards[i]);
+            }
         }
 
         cards = player.getCardsOnTable();
         for (int i = 0; i < cards.length; i++) {
-            addCardToBattleField(pl, i, cards[i]);
+            if(cards[i] != null) {
+                addCardToBattleField(pl, i, cards[i]);
+            }
         }
 
         ArrayList<Card> magicCards = player.getMagicCardsUsed();
