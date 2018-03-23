@@ -20,7 +20,6 @@ public class CardOnTableMove implements Move {
                 if(card.isMagicCard()) {
                     useMagic(makingMovePlayer, enemyPlayer, card.getNumberOfMagic());
                     makingMovePlayer.useMagicCard(cardIndex);
-                    makingMovePlayer.destroyCardInHand(cardIndex);
                 } else {
                     makingMovePlayer.putCardOnTable(cardIndex);
                     if (card.getNumberOfMagic() != -1) {

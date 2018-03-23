@@ -5,7 +5,6 @@ import main.Game;
 import main.Player;
 import main.TreeOfGame;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import moves.Move;
 
@@ -51,9 +50,8 @@ public class SpoonPlayer implements PlayerSIInterface
 	private int evaluate(Game game, ArrayList<Move> fullMove)
 	{
 		Game tempGame=game.clone();
-		tempGame.initializeMove();
+		tempGame.initializeMove(false);
 		tempGame.performMoves(fullMove);
-		tempGame.clearArrays();
 
 		int rate=0;
 		if(numberOfIntelligence==2)
@@ -70,7 +68,7 @@ public class SpoonPlayer implements PlayerSIInterface
 		int rate=0;
 		Player enemy = game.getEnemyPlayer();
 		rate-=3*enemy.getHealth();
-		for(Card card : enemy.getCardOnTable())
+		for(Card card : enemy.getCardsOnTable())
 		{
 			rate-=card.getLife()+card.getAttack();
 		}
@@ -82,7 +80,7 @@ public class SpoonPlayer implements PlayerSIInterface
 		int rate=0;
 		Player currentPlayer = game.getCurrentPlayer();
 		rate+=3*currentPlayer.getHealth();
-		for(Card card : currentPlayer.getCardOnTable())
+		for(Card card : currentPlayer.getCardsOnTable())
 		{
 			rate+=card.getLife()+card.getAttack();
 		}

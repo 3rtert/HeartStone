@@ -1,6 +1,7 @@
 package GUI;
 
 import main.Card;
+import main.Game;
 
 public interface GUIInterface {
     void setNumberOfCardsInDeck(PlayerNumber player, int number);
@@ -11,4 +12,5 @@ public interface GUIInterface {
     void clearCards(PlayerNumber player);
     void moveNotification(PlayerNumber player, boolean set);
     void addMagicCard(PlayerNumber player, int index, Card card);
+    void refresh(Game game);
 }

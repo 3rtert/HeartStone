@@ -15,10 +15,10 @@ public class Game {
     private Player[] player = new Player[2];
     private PlayerSIInterface[] playersAI = new PlayerSIInterface[2];
 
-    private int currentPlayer; //0 - 1
-    private int enemyPlayer; //1 - 0
+    private int currentPlayer = 0; //0 - 1
+    private int enemyPlayer = 1; //1 - 0
 
-    private int round;
+    private int round = 1;
 
     private int playerWin = -1;
 
@@ -27,11 +27,6 @@ public class Game {
         player[0].init(true);
         player[1] = new Player();
         player[1].init(false);
-
-        currentPlayer = 0;
-        enemyPlayer = 1;
-
-        round = 1;
     }
 
     public Game clone() {
@@ -69,20 +64,21 @@ public class Game {
         }
     }
 
-    public void initializeMove() {
+    public void initializeMove(boolean random) {
         player[currentPlayer].updateMana(round);
-        player[currentPlayer].getCard();
+
+        if(random) {
+            player[currentPlayer].getRandomCard();
+        } else {
+            player[currentPlayer].getCard();
+        }
+
         player[currentPlayer].updateCardsAttack();
         player[currentPlayer].clearAllMagicCards();
     }
-    public void initializeMove(boolean random) {
-        player[currentPlayer].updateMana(round);
-        player[currentPlayer].getRandomCard();
-        player[currentPlayer].updateCardsAttack();
-    }
 
-    public void move() {
-        ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, 100);
+    public void move(int maxTime) {
+        ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, maxTime);
         for (Move move : moves) {
             move.perform(player[currentPlayer], player[enemyPlayer]);
             if (player[enemyPlayer].isChampDestroyed()) {
@@ -90,12 +86,8 @@ public class Game {
                 break;
             }
         }
-        clearArrays();
     }
-    public void clearArrays() {
-        player[currentPlayer].clearBoard();
-        player[enemyPlayer].clearBoard();
-    }
+
     public boolean performMoves(ArrayList<Move> moves) {
         for (Move move : moves) {
             if (!move.perform(player[currentPlayer], player[enemyPlayer])) {
@@ -114,41 +106,20 @@ public class Game {
         enemyPlayer = enemyPlayer == 0 ? 1 : 0;
     }
 
-    public void refreshGui(GUIInterface gui) {
-        refreshGuiForPlayer(gui, PlayerNumber.ONE, 0);
-        refreshGuiForPlayer(gui, PlayerNumber.TWO, 1);
-    }
-
-    private void refreshGuiForPlayer(GUIInterface gui, PlayerNumber pl, int index) {
-        gui.setNumberOfCardsInDeck(pl, player[index].getNumberOfCardsInStack());
-        gui.setAmountOfMana(pl, player[index].getMana());
-        gui.setNumberOfLifePoints(pl, player[index].getHealth());
-
-        gui.clearCards(pl);
-        ArrayList<Card> cards = player[index].getCardsInHand();
-        for (int i = 0; i < cards.size(); i++) {
-            Card card = cards.get(i);
-            gui.addCardToPlayersHand(pl, i, card);
-        }
-
-        cards = player[index].getCardOnTable();
-        for (int i = 0; i < cards.size(); i++) {
-            Card card = cards.get(i);
-            gui.addCardToBattleField(pl, i, card);
-        }
-        gui.moveNotification(pl, index == currentPlayer);
-    }
-
-    public int getCurrentPLayerId()
-    {
+    public int getCurrentPLayerId() {
     	return currentPlayer;
     }
+
     public Player getCurrentPlayer() {
         return player[currentPlayer];
     }
 
     public Player getEnemyPlayer() {
         return player[enemyPlayer];
+    }
+
+    public Player getPlayer(int index) {
+        return player[index];
     }
 
     public boolean didGameEnded() {

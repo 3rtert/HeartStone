@@ -23,7 +23,7 @@ public class AttackCardMove implements Move {
     public boolean perform(Player makingMovePlayer, Player enemyPlayer) {
         try {
             Card myCard = makingMovePlayer.getCardOnTable(indexOfAttackingCard);
-            if (!myCard.canCardAttack() || enemyPlayer.getHealth() <= 0) {
+            if (myCard == null || !myCard.canCardAttack() || enemyPlayer.getHealth() <= 0) {
                 return false;
             }
             myCard.attack();
@@ -31,9 +31,12 @@ public class AttackCardMove implements Move {
                 enemyPlayer.dealDmgToChamp(myCard.getAttack());
             } else {
                 Card enemyCard = enemyPlayer.getCardOnTable(indexOfAttackedCard);
-                if (!enemyPlayer.dealDmgToCard(indexOfAttackedCard, myCard.getAttack())) {
+                if (enemyCard == null) {
                     return false;
                 }
+
+                enemyPlayer.dealDmgToCard(indexOfAttackedCard, myCard.getAttack());
+
                 if (enemyCard.getLife() > 0) {
                     makingMovePlayer.dealDmgToCard(indexOfAttackingCard, enemyCard.getAttack());
                     enemyMove = new AttackCardMove(indexOfAttackedCard, indexOfAttackingCard);

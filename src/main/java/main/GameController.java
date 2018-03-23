@@ -27,13 +27,13 @@ public class GameController {
     }
 
     private void playerMove() {
-        game.initializeMove();
+        game.initializeMove(false);
 
         if (withGui) {
-            game.refreshGui(gui);
+            gui.refresh(game);
         }
 
-        game.move();
+        game.move(1000);
         game.endTour();
     }
 

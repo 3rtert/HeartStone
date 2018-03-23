@@ -5,12 +5,17 @@ import java.util.Stack;
 import java.util.ArrayList;
 
 public class Player {
-    private int hp = 20;
+
+    private int hp = Constants.PLAYER_HP;
     private int mana = 0;
     private int penaltyForEmptyDeck = 1;
 
-    private ArrayList<Card> cardOnTable = new ArrayList<>(Constants.NUMBER_OF_CARDS_ON_TABLE);
-    private ArrayList<Card> cardsInHand = new ArrayList<>(20);
+    private Card[] cardsOnTable = new Card[Constants.NUMBER_OF_CARDS_ON_TABLE];
+    private int numberOfCardsOnTable = 0;
+
+    private Card[] cardsInHand = new Card[Constants.MAXIMUM_NUMBER_OF_CARDS_IN_HAND];
+    private int numberOfCardsInHand = 0;
+
     private ArrayList<Card> magicCardsUsed = new ArrayList<>();
 
     private Stack<Card> stack = new Stack<>();
@@ -34,12 +39,14 @@ public class Player {
         newPlayer.hp = hp;
         newPlayer.mana = mana;
         newPlayer.penaltyForEmptyDeck = penaltyForEmptyDeck;
-        for (int i = 0; i < cardOnTable.size(); i++) {
-            newPlayer.cardOnTable.add(cardOnTable.get(i).clone());
-        }
-        for (int i = 0; i < cardsInHand.size(); i++) {
-            newPlayer.cardsInHand.add(cardsInHand.get(i).clone());
-        }
+
+        newPlayer.cardsOnTable = cardsOnTable.clone();
+
+        newPlayer.numberOfCardsInHand = numberOfCardsInHand;
+        newPlayer.numberOfCardsOnTable = numberOfCardsOnTable;
+
+        newPlayer.cardsInHand = cardsInHand.clone();
+
         for (int i = 0; i < stack.size(); i++) {
             newPlayer.stack.add(stack.get(i).clone());
         }
@@ -51,16 +58,20 @@ public class Player {
     }
 
     public void useMagicCard(int index) {
-        magicCardsUsed.add(cardsInHand.get(index));
+        magicCardsUsed.add(cardsInHand[index]);
+        destroyCardInHand(index);
     }
 
     public void clearAllMagicCards() {
         magicCardsUsed = new ArrayList<>();
     }
+
     public ArrayList<Card> getCardsOnTableCopy() {
         ArrayList<Card> cards = new ArrayList<>();
-        for (int i = 0; i < cardOnTable.size(); i++) {
-            cards.add(cardOnTable.get(i).clone());
+        for (int ind = 0; ind < cardsOnTable.length; ind++) {
+           if(cardsOnTable[ind] != null) {
+               cards.add(cardsOnTable[ind]);
+           }
         }
         return cards;
     }
@@ -73,39 +84,30 @@ public class Player {
         return hp <= 0;
     }
 
-    public boolean dealDmgToCard(int indexOfCard, int dmg) {
-        Card card = cardOnTable.get(indexOfCard);
-        if (card.getLife() > 0) {
-            card.dealDmg(dmg);
-            return true;
-        }
-        return false;
-    }
-
-    public void clearBoard() {
-        for (Card card : cardOnTable) {
-            if (card.isCardDestroyed()) {
-                cardOnTable.remove(card);
-            }
+    public void dealDmgToCard(int indexOfCard, int dmg) {
+        cardsOnTable[indexOfCard].dealDmg(dmg);
+        if (cardsOnTable[indexOfCard].getLife() <= 0) {
+            destroyCardOnTable(indexOfCard);
         }
     }
 
     public void dealDmgToAllCards(int dmg) {
-        for (int i = 0; i < cardOnTable.size(); i++) {
+        for (int i = 0; i < cardsOnTable.length; i++) {
             dealDmgToCard(i, dmg);
         }
     }
 
     public void destroyRandomCardOnTable() {
-        if (!cardOnTable.isEmpty()) {
+        if (numberOfCardsOnTable != 0) {
             Random random = new Random();
-            int randomNumber = random.nextInt(cardOnTable.size());
-            cardOnTable.remove(randomNumber);
+            int randomNumber = random.nextInt(numberOfCardsOnTable + 1);
+            cardsOnTable[randomNumber] = null;
+            numberOfCardsOnTable--;
         }
     }
 
     public void updateCardsAttack() {
-        for (Card card : cardOnTable) {
+        for (Card card : cardsOnTable) {
             card.enableAttack();
         }
     }
@@ -113,21 +115,37 @@ public class Player {
     public void putCardOnTable(int index) {
         try {
             Card card = getCardInHand(index);
-            cardOnTable.add(card);
-            cardsInHand.remove(index);
+            cardsOnTable[numberOfCardsOnTable++] = card;
+
+            destroyCardInHand(index);
+
         } catch (Exception e) {
             System.out.println("put card on table problem" + e.getMessage());
         }
     }
 
     public void getCardFromDeck() {
-        cardsInHand.add(stack.pop());
+        addCardToHand(stack.pop());
     }
 
-    public Card getRadomCardFromDeck()
+    private void addCardToHand(Card card) {
+        if(numberOfCardsInHand < 20) {
+            cardsInHand[numberOfCardsInHand++] = card;
+        } else {
+            System.out.println("To many cards in hand");
+        }
+    }
+
+    public Card getRandomCard() {
+        return null;
+    }
+
+    public Card getRandomCardFromDeck()
     {
     	Random generator = new Random();
-    	return cardsInHand.add(stack.get(generator.nextInt(stack.size())));
+    	Card card = stack.get(generator.nextInt(stack.size()));
+    	addCardToHand(card);
+    	return card;
     }
     
     //change to collection.shuffle??
@@ -189,27 +207,37 @@ public class Player {
     }
 
     public Card getCardOnTable(int index) {
-        return cardOnTable.get(index);
+        return cardsOnTable[index];
     }
 
     public Card getCardInHand(int index) throws Exception {
-        return cardsInHand.get(index);
+        if(cardsInHand[index] != null) {
+            return cardsInHand[index];
+        } else {
+            throw new Exception("No card with this index");
+        }
+
     }
 
     public void destroyCardInHand(int index) {
-        cardsInHand.remove(index);
+        cardsInHand[index] = null;
+        numberOfCardsInHand--;
     }
 
+    private void destroyCardOnTable(int index) {
+        cardsOnTable[index] = null;
+        numberOfCardsOnTable--;
+    }
     public int getNumberOfCardsInStack() {
         return stack.size();
     }
 
     public int getNumberOfCardsInHand() {
-        return cardsInHand.size();
+        return numberOfCardsInHand;
     }
 
     public int getNumberOfCardsOnTable() {
-        return cardOnTable.size();
+        return numberOfCardsOnTable;
     }
 
     //for testing
@@ -225,11 +253,11 @@ public class Player {
         return mana;
     }
 
-    public ArrayList<Card> getCardOnTable() {
-        return cardOnTable;
+    public Card[] getCardsOnTable() {
+        return cardsOnTable;
     }
 
-    public ArrayList<Card> getCardsInHand() {
+    public Card[] getCardsInHand() {
         return cardsInHand;
     }
 
@@ -239,6 +267,10 @@ public class Player {
         } else {
             dealDmgToChamp(penaltyForEmptyDeck++);
         }
+    }
+
+    public ArrayList<Card> getMagicCardsUsed() {
+        return magicCardsUsed;
     }
 
     public void updateMana(int round) {

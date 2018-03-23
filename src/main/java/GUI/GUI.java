@@ -1,6 +1,8 @@
 package GUI;
 
 import main.Card;
+import main.Game;
+import main.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,4 +90,34 @@ public class GUI extends JFrame implements GUIInterface {
     public void addMagicCard(PlayerNumber player, int index, Card card){
         players.get(player).addMagicCard(index, card);
     };
+
+    public void refresh(Game game) {
+        refreshGuiForPlayer(game.getPlayer(0), PlayerNumber.ONE);
+        refreshGuiForPlayer(game.getPlayer(1), PlayerNumber.TWO);
+
+        moveNotification(PlayerNumber.ONE, game.getCurrentPLayerId() == 0);
+        moveNotification(PlayerNumber.TWO, game.getCurrentPLayerId() == 0);
+    }
+
+    private void refreshGuiForPlayer(Player player, PlayerNumber pl) {
+        setNumberOfCardsInDeck(pl, player.getNumberOfCardsInStack());
+        setAmountOfMana(pl, player.getMana());
+        setNumberOfLifePoints(pl, player.getHealth());
+
+        clearCards(pl);
+        Card[] cards = player.getCardsInHand();
+        for (int i = 0; i < cards.length; i++) {
+            addCardToPlayersHand(pl, i, cards[i]);
+        }
+
+        cards = player.getCardsOnTable();
+        for (int i = 0; i < cards.length; i++) {
+            addCardToBattleField(pl, i, cards[i]);
+        }
+
+        ArrayList<Card> magicCards = player.getMagicCardsUsed();
+        for (int i = 0; i < magicCards.size(); i++) {
+            addMagicCard(pl, i, magicCards.get(i));
+        }
+    }
 }

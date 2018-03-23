@@ -1,110 +1,106 @@
 package main;
 
 import moves.*;
+import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class TreeOfGame {
-    List trees = new ArrayList<TreeOfGame>();
-    ArrayList<Move> previousMove;
-    ArrayList<ArrayList<Move>> moves;
+
+    private List trees = new ArrayList<TreeOfGame>();
+    private ArrayList<Move> previousMove;
+    private ArrayList<ArrayList<Move>> moves;
     private Game currentGame;
-    int wins = 0;
-    int loses = 0;
-    int simulacions = 0;
+    private int wins = 0;
+    private int loses = 0;
+    private int simulations = 0;
 
-    public ArrayList<Move> calculateBestMove(long maxTime, int player)
-    {
-    	long startTime = System.currentTimeMillis();
-    	while(startTime + maxTime > System.currentTimeMillis())
-    		mcts(player);
-    	return getBestMove();
-    }
-    
-    private ArrayList<Move> getBestMove() 
-    {
-    	ArrayList<Move> bestMove=null;
-		double rate=0;
-		for(int i=0;i<trees.size();i++)
-		{
-			double tempRate = wins/simulacions;
-			if(tempRate>rate)
-			{
-				rate = tempRate;
-				bestMove = ((TreeOfGame)trees.get(i)).previousMove;
-			}
-		}
-		return bestMove;
-	}
+    public ArrayList<Move> calculateBestMove(long maxTime, int player) {
+        long endTime = System.currentTimeMillis() + maxTime;
 
-	private int mcts(int player)
-    {
-    	TreeOfGame currentTree;
-    	if((currentTree = selection()) == this)
-    	{
-    		int winner = simulate(expansion().currentGame.clone());
-    		int result = (winner == player) ? 1 : 0 ;
-    		wins += result;
-    		simulacions++;
-    		return result;
-    	}
-    	else
-    	{
-    		int result = currentTree.mcts(player);
-    		wins += result;
-    		simulacions++;
-    		return result;
-    	}
+        while (endTime > System.currentTimeMillis()) {
+            mcts(player);
+        }
+
+        return getBestMove();
     }
-    
+
+    private ArrayList<Move> getBestMove() {
+        ArrayList<Move> bestMove = null;
+        double rate = 0;
+        for (int i = 0; i < trees.size(); i++) {
+            double tempRate = wins / simulations;
+            if (tempRate > rate) {
+                rate = tempRate;
+                bestMove = ((TreeOfGame) trees.get(i)).previousMove;
+            }
+        }
+        return bestMove;
+    }
+
+    private int mcts(int player) {
+        TreeOfGame currentTree;
+        if ((currentTree = selection()) == this) {
+            int winner = simulate(expansion().currentGame.clone());
+            int result = (winner == player) ? 1 : 0;
+            wins += result;
+            simulations++;
+            return result;
+        } else {
+            int result = currentTree.mcts(player);
+            wins += result;
+            simulations++;
+            return result;
+        }
+    }
+
     int simulate(Game tempGame) // return number of player who won
     {
-    	tempGame.initializeMove();
-        ArrayList<Move> moves=(new TreeOfGame(tempGame)).getRandomMove();
+        tempGame.initializeMove(false);
+        ArrayList<Move> moves = getRandomMove(tempGame);
         tempGame.performMoves(moves);
         tempGame.nextRound();
         tempGame.endTour();
         return tempGame.getPlayerWin() == -1 ? simulate(tempGame) : tempGame.getPlayerWin();
     }
-    
-    private TreeOfGame expansion()
-    {
-    	currentGame.initializeMove(true);
-    	if(moves==null)
-    		getAllMoves();
-    	ArrayList<Move> currentMove = (ArrayList<Move>)moves.remove(0);
-    	trees.add(new TreeOfGame(currentGame));
-    	((TreeOfGame)trees.get(trees.size()-1)).previousMove=currentMove;
-    	((TreeOfGame)trees.get(trees.size()-1)).currentGame.performMoves(currentMove);
-    	return ((TreeOfGame)trees.get(trees.size()-1));
+
+    private TreeOfGame expansion() {
+        currentGame.initializeMove(true);
+        if (moves == null)
+            getAllMoves();
+        ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
+
+        TreeOfGame newLeaf = new TreeOfGame(currentGame);
+        newLeaf.previousMove = currentMove;
+        newLeaf.currentGame.performMoves(currentMove);
+
+        trees.add(newLeaf);
+
+        return newLeaf;
     }
-    
-    private TreeOfGame selection()
-    {
-    	if(moves==null || moves.isEmpty() || trees.isEmpty())
-    	{
-    		return this;
-    	}
-    	else
-    	{
-    		TreeOfGame current=null;
-    		double rate=0;
-    		for(int i=0;i<trees.size();i++)
-    		{
-    			double tempRate = wins/simulacions+Math.sqrt(2*Math.log1p(((TreeOfGame)(trees.get(i))).simulacions)/simulacions);
-    			if(tempRate>rate)
-    			{
-    				rate = tempRate;
-    				current = (TreeOfGame)trees.get(i);
-    			}
-    		}
-    		return current;
-    	}
+
+    // we wzorze nie powinno być odwrotnie simulations???
+    //TODO parametr c
+    private TreeOfGame selection() {
+        if (moves == null || moves.isEmpty() || trees.isEmpty()) {
+            return this;
+        } else {
+            TreeOfGame current = null;
+            double rate = 0;
+            for (int i = 0; i < trees.size(); i++) {
+                double tempRate = wins / simulations + Math.sqrt(2 * Math.log1p(((TreeOfGame) (trees.get(i))).simulations) / simulations);
+                if (tempRate > rate) {
+                    rate = tempRate;
+                    current = (TreeOfGame) trees.get(i);
+                }
+            }
+            return current;
+        }
     }
-    
-    
+
+
     public TreeOfGame(Game game) {
         currentGame = game.clone();
     }
@@ -116,8 +112,8 @@ public class TreeOfGame {
         ArrayList<ArrayList<Move>> possibleMovesCardOnTable = combinationsCardOnTable();
         ArrayList<ArrayList<Move>> possibleMovesCardAttacks = getAllPossibleCardAttackMoves();
         //cross product
-        for(ArrayList<Move> singleMove: possibleMovesCardOnTable) {
-            for(ArrayList<Move> singleAttack: possibleMovesCardAttacks) {
+        for (ArrayList<Move> singleMove : possibleMovesCardOnTable) {
+            for (ArrayList<Move> singleAttack : possibleMovesCardAttacks) {
                 ArrayList<Move> combined = new ArrayList<>();
                 combined.addAll(singleMove);
                 combined.addAll(singleAttack);
@@ -130,9 +126,9 @@ public class TreeOfGame {
         return output;
     }
 
-    public ArrayList<ArrayList<Move>> combinationsCardOnTable() {
+    private ArrayList<ArrayList<Move>> combinationsCardOnTable() {
 
-        ArrayList<Move> moves = getAllPossibleCardOnTableMoves();
+        ArrayList<Move> moves = getAllPossibleCardOnTableMoves(currentGame);
         ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
 
         for (long i = 1; i < Math.pow(2, moves.size()); i++) {
@@ -145,50 +141,57 @@ public class TreeOfGame {
                     Move move = moves.get(j);
                     mana -= move.getMoveCost(currentGame.getCurrentPlayer());
                     freeSpots--;
-                    if(mana < 0 || freeSpots < 0) {
+                    if (mana < 0 || freeSpots < 0) {
                         enoughMana = false;
                         break;
                     }
                     movesList.add(move);
                 }
             }
-            if(enoughMana) {
+            if (enoughMana) {
                 combinationList.add(movesList);
             }
         }
         return combinationList;
     }
 
-    public ArrayList<Move> getAllPossibleCardOnTableMoves() {
+    private ArrayList<Move> getAllPossibleCardOnTableMoves(Game game) {
         ArrayList<Move> moves = new ArrayList<>();
-        int mana = currentGame.getCurrentPlayer().getMana();
+        int mana = game.getCurrentPlayer().getMana();
 
-        ArrayList<Card> cardsInHand = currentGame.getCurrentPlayer().getCardsInHand();
-        for (int i = 0; i < cardsInHand.size(); i++) {
-            if(cardsInHand.get(i).getManaCost() <= mana) {
-                moves.add(new CardOnTableMove(i));
-            }
-        }
+         Card[] cardsInHand = game.getCurrentPlayer().getCardsInHand();
+          for (int i = 0; i < cardsInHand.length; i++) {
+             if(cardsInHand[i] != null && cardsInHand[i].getManaCost() <= mana) {
+                  moves.add(new CardOnTableMove(i));
+             }
+          }
         return moves;
     }
 
-    public ArrayList<Move> getAllPossibleSingleCardAttackMoves() {
+    private ArrayList<Move> getAllPossibleSingleCardAttackMoves() {
         ArrayList<Move> moves = new ArrayList<>();
-        ArrayList<Card> cardsOnTable = currentGame.getCurrentPlayer().getCardOnTable();
-        ArrayList<Card> enemyCardsOnTable = currentGame.getEnemyPlayer().getCardOnTable();
-        for (int i = 0; i < cardsOnTable.size(); i++) {
-            moves.add(new AttackCardMove(i, -1)); // add attack on hero
-            for(int j = 0; j < enemyCardsOnTable.size(); j++) {
+        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
+        Card[] enemyCardsOnTable = currentGame.getEnemyPlayer().getCardsOnTable();
+        for (int i = 0; i < cardsOnTable.length; i++) {
+            if(cardsOnTable[i] == null) {
+                continue;
+            }
+            for (int j = 0; j < enemyCardsOnTable.length; j++) {
+                if(enemyCardsOnTable[j] == null) {
+                    continue;
+                }
                 moves.add(new AttackCardMove(i, j)); // add attack on enemy's card
             }
         }
         return moves;
     }
 
-    public ArrayList<ArrayList<Move>> getAllPossibleCardAttackMoves() {
+    private ArrayList<ArrayList<Move>> getAllPossibleCardAttackMoves() {
         ArrayList<Move> moves = getAllPossibleSingleCardAttackMoves();
 
         ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
+
+        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
 
         for (long i = 1; i < Math.pow(2, moves.size()); i++) {
             ArrayList<Move> movesList = new ArrayList<>();
@@ -198,46 +201,67 @@ public class TreeOfGame {
                     movesList.add(move);
                 }
             }
-            //TODO for each permutation
 
             Game gameClone = currentGame.clone();
-            if(gameClone.performMoves(movesList)) {
+            if (gameClone.performMoves(movesList)) {
+
+                for (int ind = 0; ind < cardsOnTable.length; ind++) {
+                    if(cardsOnTable[ind] != null && cardsOnTable[ind].canCardAttack()) {
+                        movesList.add(new AttackCardMove(ind, -1)); // add attack on hero
+                    }
+                }
+
                 combinationList.add(movesList);
             }
         }
+
+        ArrayList<Move> onlyHeroAttackMoves = new ArrayList<>();
+        for (int ind = 0; ind < cardsOnTable.length; ind++) {
+            onlyHeroAttackMoves.add(new AttackCardMove(ind, -1)); // add attack on hero
+        }
+        combinationList.add(onlyHeroAttackMoves);
+
         return combinationList;
 
     }
 
-    public ArrayList<Move> getRandomMove() {
+    private ArrayList<Move> getRandomMove(Game game) {
         ArrayList<Move> toPerformMoves = new ArrayList<>();
 
-        ArrayList<Move> moves = getAllPossibleCardOnTableMoves();
+        ArrayList<Move> moves = getAllPossibleCardOnTableMoves(game);
         Random random = new Random();
-        int cardsInHand = currentGame.getCurrentPlayer().getNumberOfCardsInHand();
+        int cardsInHand = game.getCurrentPlayer().getNumberOfCardsInHand();
         int numberOfMoves = random.nextInt(cardsInHand + 1);
 
-        for(int i = 0; i < numberOfMoves; i++) {
-            int cardIndex = random.nextInt(moves.size());
-            Move move = moves.get(cardIndex);
-            toPerformMoves.add(move);
-            moves.remove(move);
+        int mana = game.getCurrentPlayer().getMana();
+        int usedMana = 0;
+
+        for (int i = 0; i < numberOfMoves; i++) {
+            int moveIndex = random.nextInt(moves.size());
+            Move move = moves.get(moveIndex);
+
+            usedMana += move.getMoveCost(game.getCurrentPlayer());
+            if(usedMana <= mana) {
+                toPerformMoves.add(move);
+                moves.remove(move);
+            }
         }
 
-        int cardsOnTable = currentGame.getCurrentPlayer().getNumberOfCardsOnTable();
+        /*int cardsOnTable = game.getCurrentPlayer().getNumberOfCardsOnTable();
         int numberOfAttack = random.nextInt(cardsOnTable + 1);
 
-        ArrayList<Card> myCards = currentGame.getCurrentPlayer().getCardsOnTableCopy();
-        ArrayList<Card> enemyCards = currentGame.getEnemyPlayer().getCardsOnTableCopy();
+
+        ArrayList<Card> myCards = game.getCurrentPlayer().getCardsOnTableCopy();
+        ArrayList<Card> enemyCards = game.getEnemyPlayer().getCardsOnTableCopy();
 
         int numberOfMyDestroyedCards = 0;
         int numberOfEnemyDestroyedCards = 0;
 
-        for(int i = 0; i < numberOfAttack; i++) {
+        for (int i = 0; i < numberOfAttack; i++) {
             int myCardIndex = random.nextInt(myCards.size());
             int typeOfAttack = random.nextInt(2);
 
-            if(typeOfAttack == 0) {
+            if (typeOfAttack == 0) {
                 toPerformMoves.add(new AttackCardMove(myCardIndex + i, -1));
                 myCards.remove(myCardIndex);
             } else {
@@ -245,12 +269,12 @@ public class TreeOfGame {
                 Card attackedCard = enemyCards.get(enemyCardIndex);
                 Card card = myCards.get(myCardIndex);
                 attackedCard.dealDmg(card.getAttack());
-                if(attackedCard.isCardDestroyed()) {
+                if (attackedCard.isCardDestroyed()) {
                     enemyCards.remove(attackedCard);
                     numberOfEnemyDestroyedCards++;
                 } else {
                     card.dealDmg(attackedCard.getAttack());
-                    if(card.isCardDestroyed()) {
+                    if (card.isCardDestroyed()) {
                         myCards.remove(card);
                         numberOfMyDestroyedCards++;
                     }
@@ -258,7 +282,7 @@ public class TreeOfGame {
                 toPerformMoves.add(new AttackCardMove(myCardIndex + numberOfMyDestroyedCards,
                         enemyCardIndex + numberOfEnemyDestroyedCards));
             }
-        }
+        }*/
 
         return toPerformMoves;
     }
