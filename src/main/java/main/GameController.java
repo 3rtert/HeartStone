@@ -40,8 +40,9 @@ public class GameController {
     public int startGame() {
         while (!game.didGameEnded()) 
         {
-            playerMove();
             game.nextRound();
+            playerMove();
+            playerMove();
         }
         return game.getPlayerWin();
     }

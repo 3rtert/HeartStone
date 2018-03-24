@@ -1,7 +1,5 @@
 package main;
 
-import GUI.*;
-
 import moves.Move;
 import players.ConsolePlayer;
 import players.MCTSPlayer;
@@ -18,7 +16,7 @@ public class Game {
     private int currentPlayer = 0; //0 - 1
     private int enemyPlayer = 1; //1 - 0
 
-    private int round = 1;
+    private int round = 0;
 
     private int playerWin = -1;
 
@@ -27,6 +25,11 @@ public class Game {
         player[0].init(true);
         player[1] = new Player();
         player[1].init(false);
+    }
+
+    public void testInit() {
+        player[0] = new Player();
+        player[1] = new Player();
     }
 
     public Game clone() {
@@ -130,5 +133,9 @@ public class Game {
 
     public int getPlayerWin() {
         return playerWin;
+    }
+
+    public int getRound() {
+        return round;
     }
 }

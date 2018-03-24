@@ -1,9 +1,7 @@
 package main;
 
-import main.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import main.Player;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,15 +53,15 @@ class PlayerTest {
         assertEquals(1, player.getNumberOfCardsOnTable());
 
         assertEquals(10, card.getLife());
-        assertTrue(player.dealDmgToCard(0, 3));
+        player.dealDmgToCard(0, 3);
         assertEquals(7, card.getLife());
 
-        assertFalse(player.dealDmgToCard(0, 7));
+        player.dealDmgToCard(0, 7);
         assertEquals(0, player.getNumberOfCardsOnTable());
     }
 
     @Test
-    void destroyRandomCardOnTableTest() {
+    void testDestroyRandomCardOnTableTest() {
         Card card = new Card(1,2,10,-1,false, true);
         Card card2 = new Card(2,3,15,-1, false, true);
         player.addCardToDeck(card);
@@ -73,7 +71,7 @@ class PlayerTest {
         player.getCardFromDeck();
 
         player.putCardOnTable(0);
-        player.putCardOnTable(0);
+        player.putCardOnTable(1);
 
         assertEquals(0, player.getNumberOfCardsInStack());
         assertEquals(0, player.getNumberOfCardsInHand());

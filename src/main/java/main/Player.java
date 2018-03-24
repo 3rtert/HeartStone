@@ -63,7 +63,7 @@ public class Player {
     }
 
     public void clearAllMagicCards() {
-        magicCardsUsed = new ArrayList<>();
+        magicCardsUsed.clear();
     }
 
     public ArrayList<Card> getCardsOnTableCopy() {
@@ -102,8 +102,17 @@ public class Player {
     public void destroyRandomCardOnTable() {
         if (numberOfCardsOnTable != 0) {
             Random random = new Random();
-            int randomNumber = random.nextInt(numberOfCardsOnTable + 1);
-            cardsOnTable[randomNumber] = null;
+            int randomNumber = random.nextInt(numberOfCardsOnTable);
+            for(int i = 0; i < cardsOnTable.length; i++) {
+
+                if(cardsOnTable[i] != null) {
+                    randomNumber--;
+                }
+                if(randomNumber < 0) {
+                    cardsOnTable[i] = null;
+                    break;
+                }
+            }
             numberOfCardsOnTable--;
         }
     }
@@ -119,7 +128,13 @@ public class Player {
     public void putCardOnTable(int index) {
         try {
             Card card = getCardInHand(index);
-            cardsOnTable[numberOfCardsOnTable++] = card;
+            numberOfCardsOnTable++;
+            for(int i = 0; i<cardsOnTable.length; i++) {
+                if(cardsOnTable[i] == null) {
+                    cardsOnTable[i] = card;
+                    break;
+                }
+            }
 
             destroyCardInHand(index);
 
@@ -132,9 +147,15 @@ public class Player {
         addCardToHand(stack.pop());
     }
 
-    private void addCardToHand(Card card) {
+    public void addCardToHand(Card card) {
         if(numberOfCardsInHand < 20) {
-            cardsInHand[numberOfCardsInHand++] = card;
+            numberOfCardsInHand++;
+            for(int i = 0; i<cardsInHand.length; i++) {
+                if(cardsInHand[i] == null) {
+                    cardsInHand[i] = card;
+                    break;
+                }
+            }
         } else {
             System.out.println("To many cards in hand");
         }
@@ -158,11 +179,11 @@ public class Player {
         int[] attack = {11, 6, 6, 5, 3, 2, 2, 0, 0, 0};
         int[] life = {11, 4, 6, 5, 4, 1, 2, 0, 0, 0};
 
-        // 0 - deal 1 damage
+        // 0 - deal 1 damage to champ
         // 1 - restore 2 health
 
-        // 2 - deal 2 damage to all enemies
-        // 3 - deal 3 damage
+        // 2 - deal 2 damage to all enemies on board
+        // 3 - deal 3 damage to champ
         // 4 - destroy random enemy minion
 
         int[] numberOfMagic = {-1, -1, -1, -1, -1, 0, 1, 2, 3, 4};
