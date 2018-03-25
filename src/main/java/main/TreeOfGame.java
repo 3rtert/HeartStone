@@ -59,7 +59,7 @@ public class TreeOfGame {
     int simulate(Game tempGame) // return number of player who won
     {
         tempGame.initializeMove(false);
-        ArrayList<Move> moves = getRandomMove(tempGame);
+        ArrayList<Move> moves = MovesGenerator.getRandomMove(tempGame);
         tempGame.performMoves(moves);
         tempGame.nextRound();
         tempGame.endTour();
@@ -68,8 +68,9 @@ public class TreeOfGame {
 
     private TreeOfGame expansion() {
         currentGame.initializeMove(true);
-        if (moves == null)
-            getAllMoves();
+        if (moves == null) {
+            MovesGenerator.getAllMoves(currentGame);
+        }
         ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
 
         TreeOfGame newLeaf = new TreeOfGame(currentGame);
@@ -105,187 +106,4 @@ public class TreeOfGame {
         currentGame = game.clone();
     }
 
-    public ArrayList<ArrayList<Move>> getAllMoves() {
-
-        ArrayList<ArrayList<Move>> output = new ArrayList<>();
-
-        ArrayList<ArrayList<Move>> possibleMovesCardOnTable = combinationsCardOnTable();
-        ArrayList<ArrayList<Move>> possibleMovesCardAttacks = getAllPossibleCardAttackMoves();
-        //cross product
-        for (ArrayList<Move> singleMove : possibleMovesCardOnTable) {
-            for (ArrayList<Move> singleAttack : possibleMovesCardAttacks) {
-                ArrayList<Move> combined = new ArrayList<>();
-                combined.addAll(singleMove);
-                combined.addAll(singleAttack);
-                output.add(combined);
-            }
-        }
-        output.addAll(possibleMovesCardAttacks);
-        output.addAll(possibleMovesCardOnTable);
-        moves = output;
-        return output;
-    }
-
-    private ArrayList<ArrayList<Move>> combinationsCardOnTable() {
-
-        ArrayList<Move> moves = getAllPossibleCardOnTableMoves(currentGame);
-        ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
-
-        for (long i = 1; i < Math.pow(2, moves.size()); i++) {
-            ArrayList<Move> movesList = new ArrayList<>();
-            int mana = currentGame.getCurrentPlayer().getMana();
-            int freeSpots = Constants.NUMBER_OF_CARDS_ON_TABLE - currentGame.getCurrentPlayer().getNumberOfCardsOnTable();
-            boolean enoughMana = true;
-            for (int j = 0; j < moves.size(); j++) {
-                if ((i & (long) Math.pow(2, j)) > 0) {
-                    Move move = moves.get(j);
-                    mana -= move.getMoveCost(currentGame.getCurrentPlayer());
-                    freeSpots--;
-                    if (mana < 0 || freeSpots < 0) {
-                        enoughMana = false;
-                        break;
-                    }
-                    movesList.add(move);
-                }
-            }
-            if (enoughMana) {
-                combinationList.add(movesList);
-            }
-        }
-        return combinationList;
-    }
-
-    private ArrayList<Move> getAllPossibleCardOnTableMoves(Game game) {
-        ArrayList<Move> moves = new ArrayList<>();
-        int mana = game.getCurrentPlayer().getMana();
-
-         Card[] cardsInHand = game.getCurrentPlayer().getCardsInHand();
-          for (int i = 0; i < cardsInHand.length; i++) {
-             if(cardsInHand[i] != null && cardsInHand[i].getManaCost() <= mana) {
-                  moves.add(new CardOnTableMove(i));
-             }
-          }
-        return moves;
-    }
-
-    private ArrayList<Move> getAllPossibleSingleCardAttackMoves() {
-        ArrayList<Move> moves = new ArrayList<>();
-        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
-        Card[] enemyCardsOnTable = currentGame.getEnemyPlayer().getCardsOnTable();
-        for (int i = 0; i < cardsOnTable.length; i++) {
-            if(cardsOnTable[i] == null) {
-                continue;
-            }
-            for (int j = 0; j < enemyCardsOnTable.length; j++) {
-                if(enemyCardsOnTable[j] == null) {
-                    continue;
-                }
-                moves.add(new AttackCardMove(i, j)); // add attack on enemy's card
-            }
-        }
-        return moves;
-    }
-
-    private ArrayList<ArrayList<Move>> getAllPossibleCardAttackMoves() {
-        ArrayList<Move> moves = getAllPossibleSingleCardAttackMoves();
-
-        ArrayList<ArrayList<Move>> combinationList = new ArrayList<>();
-
-        for (long i = 1; i < Math.pow(2, moves.size()); i++) {
-            ArrayList<Move> movesList = new ArrayList<>();
-            for (int j = 0; j < moves.size(); j++) {
-                if ((i & (long) Math.pow(2, j)) > 0) {
-                    Move move = moves.get(j);
-                    movesList.add(move);
-                }
-            }
-
-            Game gameClone = currentGame.clone();
-            if (gameClone.performMoves(movesList)) {
-                Card[] cardsOnTable = gameClone.getCurrentPlayer().getCardsOnTable();
-                for (int ind = 0; ind < cardsOnTable.length; ind++) {
-                    if(cardsOnTable[ind] != null && cardsOnTable[ind].canCardAttack()) {
-                        movesList.add(new AttackCardMove(ind, -1)); // add attack on hero
-                    }
-                }
-
-                combinationList.add(movesList);
-            }
-        }
-        Card[] cardsOnTable = currentGame.getCurrentPlayer().getCardsOnTable();
-        ArrayList<Move> onlyHeroAttackMoves = new ArrayList<>();
-        for (int ind = 0; ind < cardsOnTable.length; ind++) {
-            if(cardsOnTable[ind] != null) {
-                onlyHeroAttackMoves.add(new AttackCardMove(ind, -1)); // add attack on hero
-            }
-        }
-        if(!onlyHeroAttackMoves.isEmpty()) {
-            combinationList.add(onlyHeroAttackMoves);
-        }
-
-        return combinationList;
-
-    }
-
-    private ArrayList<Move> getRandomMove(Game game) {
-        ArrayList<Move> toPerformMoves = new ArrayList<>();
-
-        ArrayList<Move> moves = getAllPossibleCardOnTableMoves(game);
-        Random random = new Random();
-        int cardsInHand = game.getCurrentPlayer().getNumberOfCardsInHand();
-        int numberOfMoves = random.nextInt(cardsInHand + 1);
-
-        int mana = game.getCurrentPlayer().getMana();
-        int usedMana = 0;
-
-        for (int i = 0; i < numberOfMoves; i++) {
-            int moveIndex = random.nextInt(moves.size());
-            Move move = moves.get(moveIndex);
-
-            usedMana += move.getMoveCost(game.getCurrentPlayer());
-            if(usedMana <= mana) {
-                toPerformMoves.add(move);
-                moves.remove(move);
-            }
-        }
-
-        /*int cardsOnTable = game.getCurrentPlayer().getNumberOfCardsOnTable();
-        int numberOfAttack = random.nextInt(cardsOnTable + 1);
-
-
-        ArrayList<Card> myCards = game.getCurrentPlayer().getCardsOnTableCopy();
-        ArrayList<Card> enemyCards = game.getEnemyPlayer().getCardsOnTableCopy();
-
-        int numberOfMyDestroyedCards = 0;
-        int numberOfEnemyDestroyedCards = 0;
-
-        for (int i = 0; i < numberOfAttack; i++) {
-            int myCardIndex = random.nextInt(myCards.size());
-            int typeOfAttack = random.nextInt(2);
-
-            if (typeOfAttack == 0) {
-                toPerformMoves.add(new AttackCardMove(myCardIndex + i, -1));
-                myCards.remove(myCardIndex);
-            } else {
-                int enemyCardIndex = random.nextInt(enemyCards.size());
-                Card attackedCard = enemyCards.get(enemyCardIndex);
-                Card card = myCards.get(myCardIndex);
-                attackedCard.dealDmg(card.getAttack());
-                if (attackedCard.isCardDestroyed()) {
-                    enemyCards.remove(attackedCard);
-                    numberOfEnemyDestroyedCards++;
-                } else {
-                    card.dealDmg(attackedCard.getAttack());
-                    if (card.isCardDestroyed()) {
-                        myCards.remove(card);
-                        numberOfMyDestroyedCards++;
-                    }
-                }
-                toPerformMoves.add(new AttackCardMove(myCardIndex + numberOfMyDestroyedCards,
-                        enemyCardIndex + numberOfEnemyDestroyedCards));
-            }
-        }*/
-
-        return toPerformMoves;
-    }
 }

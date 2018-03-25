@@ -40,12 +40,22 @@ public class Player {
         newPlayer.mana = mana;
         newPlayer.penaltyForEmptyDeck = penaltyForEmptyDeck;
 
-        newPlayer.cardsOnTable = cardsOnTable.clone();
+        newPlayer.cardsOnTable = new Card[Constants.NUMBER_OF_CARDS_ON_TABLE];
+        for(int i = 0; i<cardsOnTable.length;i++) {
+            if(cardsOnTable[i] != null) {
+                newPlayer.cardsOnTable[i] = cardsOnTable[i].clone();
+            }
+        }
 
         newPlayer.numberOfCardsInHand = numberOfCardsInHand;
         newPlayer.numberOfCardsOnTable = numberOfCardsOnTable;
 
-        newPlayer.cardsInHand = cardsInHand.clone();
+        newPlayer.cardsInHand = new Card[Constants.MAXIMUM_NUMBER_OF_CARDS_IN_HAND];
+        for(int i = 0; i<cardsInHand.length;i++) {
+            if(cardsInHand[i] != null) {
+                newPlayer.cardsInHand[i] = cardsInHand[i].clone();
+            }
+        }
 
         for (int i = 0; i < stack.size(); i++) {
             newPlayer.stack.add(stack.get(i).clone());
@@ -128,18 +138,22 @@ public class Player {
     public void putCardOnTable(int index) {
         try {
             Card card = getCardInHand(index);
-            numberOfCardsOnTable++;
-            for(int i = 0; i<cardsOnTable.length; i++) {
-                if(cardsOnTable[i] == null) {
-                    cardsOnTable[i] = card;
-                    break;
-                }
-            }
+            addCardToBoard(card);
 
             destroyCardInHand(index);
 
         } catch (Exception e) {
             System.out.println("put card on table problem" + e.getMessage());
+        }
+    }
+
+    public void addCardToBoard(Card card) {
+        numberOfCardsOnTable++;
+        for(int i = 0; i<cardsOnTable.length; i++) {
+            if(cardsOnTable[i] == null) {
+                cardsOnTable[i] = card;
+                break;
+            }
         }
     }
 
@@ -300,5 +314,19 @@ public class Player {
 
     public void updateMana(int round) {
         mana = Math.min(round, 10);
+    }
+
+    public int findIndexOfCard(int n) {
+        int counter = 0;
+        for(int i = 0; i<cardsOnTable.length; i++) {
+            if(cardsOnTable[i] != null) {
+                if(counter == n) {
+                    return i;
+                } else {
+                    counter++;
+                }
+            }
+        }
+        return -1;
     }
 }

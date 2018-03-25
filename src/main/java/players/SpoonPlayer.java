@@ -1,9 +1,6 @@
 package players;
 
-import main.Card;
-import main.Game;
-import main.Player;
-import main.TreeOfGame;
+import main.*;
 
 import java.util.ArrayList;
 import moves.Move;
@@ -25,8 +22,7 @@ public class SpoonPlayer implements PlayerSIInterface
 	@Override
 	public ArrayList<Move> calculateNextMove(Game currentGame, long maxTime)
 	{
-		TreeOfGame treeOfGame=new TreeOfGame(currentGame);
-		ArrayList<ArrayList<Move>> allMoves = treeOfGame.getAllMoves();
+		ArrayList<ArrayList<Move>> allMoves = MovesGenerator.getAllMoves(currentGame);
         System.out.println("Possible moves: " + allMoves.size());
 		int bestMoveScore=0;
 		ArrayList<Move> bestMove=new ArrayList<Move>();
