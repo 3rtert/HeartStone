@@ -23,19 +23,12 @@ public class SpoonPlayer implements PlayerSIInterface
 	public ArrayList<Move> calculateNextMove(Game currentGame, long maxTime)
 	{
 		ArrayList<ArrayList<Move>> allMoves = MovesGenerator.getAllMoves(currentGame);
-        System.out.println("Possible moves: " + allMoves.size());
+
 		int bestMoveScore=0;
 		ArrayList<Move> bestMove=new ArrayList<Move>();
 		for(ArrayList<Move> move : allMoves)
 		{
-		    System.out.print("Move:");
-		    for(Move singleMove : move) {
-                System.out.print(singleMove);
-            }
-
 			int currentMoveScore = evaluate(currentGame, move);
-		    System.out.print(" Score: " + currentMoveScore);
-			System.out.println("");
 
 			if(currentMoveScore>bestMoveScore || bestMoveScore == 0)
 			{
@@ -43,10 +36,6 @@ public class SpoonPlayer implements PlayerSIInterface
 				bestMove=move;
 			}
 		}
-        System.out.print("Best move in function:");
-        for(Move singleMove : bestMove) {
-            System.out.print(singleMove);
-        }
 		return bestMove;
 	}
 	

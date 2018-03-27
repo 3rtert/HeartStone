@@ -16,7 +16,7 @@ public class PlayerGUIStatFields {
     public static final int NAME_INDEX = 5;
     public static final int MOVE_NOTIFICATION = 5;
     public static final int LIFE_POINT_NUMBER_INDEX = 4;
-    public int magicCardsIdx[] = {6,7,8,4,3,2};
+    public int magicCardsIdx[] = {6,7,8,3,2,1};
     private ArrayList<JLabel> cardsInHand = new ArrayList<>();
 
     private ArrayList<JLabel> fields = new ArrayList<>();

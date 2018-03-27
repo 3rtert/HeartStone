@@ -61,8 +61,7 @@ public class Main
                 }
             }
 
-            System.out.println("First player wins: " + firstPlayerWins);
-            System.out.println("Second player wins: " + (numberOfPlays - firstPlayerWins));
+            System.out.print(firstPlayerWins + "," + (numberOfPlays - firstPlayerWins) + "\n");
 
         } catch (Exception exception) {
             System.out.print("Parse error: ");
