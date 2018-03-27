@@ -82,16 +82,18 @@ public class TreeOfGame {
         return newLeaf;
     }
 
-    // we wzorze nie powinno być odwrotnie simulations???
-    //TODO parametr c
-    private TreeOfGame selection() {
+    private TreeOfGame selection()
+    {
+    	return selection(2);
+    }
+    private TreeOfGame selection(int c) {
         if (moves == null || moves.isEmpty() || trees.isEmpty()) {
             return this;
         } else {
             TreeOfGame current = null;
             double rate = 0;
             for (int i = 0; i < trees.size(); i++) {
-                double tempRate = wins / simulations + Math.sqrt(2 * Math.log1p(((TreeOfGame) (trees.get(i))).simulations) / simulations);
+                double tempRate = wins / simulations + Math.sqrt(c * Math.log1p(((TreeOfGame) (trees.get(i))).simulations) / simulations);
                 if (tempRate > rate) {
                     rate = tempRate;
                     current = (TreeOfGame) trees.get(i);
