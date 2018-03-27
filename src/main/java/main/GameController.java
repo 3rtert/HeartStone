@@ -6,6 +6,8 @@ import GUI.GUIInterface;
 public class GameController {
 
     private boolean withGui;
+    private int moveMaxTime = 1000;
+    private float c_param = 1;
     private GUIInterface gui;
 
     private Game game;
@@ -23,7 +25,7 @@ public class GameController {
     }
 
     public void setPlayersAI(String player1, String player2) {
-        game.setAIPlayers(player1, player2);
+        game.setAIPlayers(player1, player2, c_param);
     }
 
     private void playerMove() {
@@ -33,7 +35,7 @@ public class GameController {
             gui.refresh(game);
         }
 
-        game.move(1000);
+        game.move(moveMaxTime);
         game.endTour();
     }
 
@@ -45,5 +47,13 @@ public class GameController {
             playerMove();
         }
         return game.getPlayerWin();
+    }
+
+    public void setMoveMaxTime(int moveMaxTime) {
+        this.moveMaxTime = moveMaxTime;
+    }
+
+    public void setC_param(float c_param) {
+        this.c_param = c_param;
     }
 }

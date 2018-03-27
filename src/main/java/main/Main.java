@@ -30,7 +30,8 @@ public class Main
         options.addOption(playerOption1);
         options.addOption(playerOption2);
         options.addOption("n", "numberOfPlays", true, "Number of plays");
-
+        options.addOption("t", "maxTime", true, "Move maximum time");
+        options.addOption("c", "cParam", true, "C parameter MCTS");
         options.addOption("gui", "withGui", false, "Game with gui");
 
         CommandLineParser parser = new DefaultParser();
@@ -52,6 +53,13 @@ public class Main
 
             GameController controller = new GameController(withGui);
 
+            if(commandLine.hasOption("c")) {
+                controller.setC_param(Float.parseFloat(commandLine.getOptionValue("c")));
+            }
+
+            if(commandLine.hasOption("t")) {
+                controller.setMoveMaxTime(Integer.parseInt(commandLine.getOptionValue("t")));
+            }
             int firstPlayerWins = 0;
             for(int i = 0; i < numberOfPlays; i++) {
                 controller.init();

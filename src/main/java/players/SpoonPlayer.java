@@ -3,83 +3,86 @@ package players;
 import main.*;
 
 import java.util.ArrayList;
+
 import moves.Move;
 
-public class SpoonPlayer implements PlayerSIInterface
-{
-    //numberOfIntelligence:
-    //0 - consolePLayer (no inteligance)
-    //1 - intelligence player (WIP)
-    //2 - attack player
-    //3 - deff player
-    //4 - ...
-	private int numberOfIntelligence;
+public class SpoonPlayer implements PlayerSIInterface {
+    //0 - aggressive
+    //1 - controlling
+    private int numberOfIntelligence;
 
     public SpoonPlayer(int numberOfIntelligence) {
         this.numberOfIntelligence = numberOfIntelligence;
     }
 
-	@Override
-	public ArrayList<Move> calculateNextMove(Game currentGame, long maxTime)
-	{
-		ArrayList<ArrayList<Move>> allMoves = MovesGenerator.getAllMoves(currentGame);
+    @Override
+    public ArrayList<Move> calculateNextMove(Game currentGame, long maxTime) {
+        ArrayList<ArrayList<Move>> allMoves = MovesGenerator.getAllMoves(currentGame);
 
-		int bestMoveScore=0;
-		ArrayList<Move> bestMove=new ArrayList<Move>();
-		for(ArrayList<Move> move : allMoves)
-		{
-			int currentMoveScore = evaluate(currentGame, move);
+        int bestMoveScore = 0;
+        ArrayList<Move> bestMove = new ArrayList<>();
+        for (ArrayList<Move> move : allMoves) {
+            int currentMoveScore = evaluate(currentGame, move);
 
-			if(currentMoveScore>bestMoveScore || bestMoveScore == 0)
-			{
-				bestMoveScore=currentMoveScore;
-				bestMove=move;
-			}
-		}
-		return bestMove;
-	}
-	
-	private int evaluate(Game game, ArrayList<Move> fullMove)
-	{
-		Game tempGame=game.clone();
-		tempGame.initializeMove(false);
-		tempGame.performMoves(fullMove);
-
-		int rate=0;
-		if(numberOfIntelligence==2)
-			rate=100*evaluateAggressive(tempGame)+evaluateDefensive(tempGame);
-		else if(numberOfIntelligence==3)
-			rate=evaluateAggressive(tempGame)+evaluateDefensive(tempGame)*100;
-		else if(numberOfIntelligence==4)
-			rate=evaluateAggressive(tempGame)+evaluateDefensive(tempGame);
-		return rate;
-	}
-	
-	private int evaluateAggressive(Game game)
-	{
-		int rate=0;
-		Player enemy = game.getEnemyPlayer();
-		rate-=3*enemy.getHealth();
-		for(Card card : enemy.getCardsOnTable())
-		{
-		    if(card != null) {
-                rate -= card.getLife() + card.getAttack();
+            if (currentMoveScore > bestMoveScore || bestMoveScore == 0) {
+                bestMoveScore = currentMoveScore;
+                bestMove = move;
             }
-		}
-		return rate;
-	}
-	
-	private int evaluateDefensive(Game game)
-	{
-		int rate=0;
-		Player currentPlayer = game.getCurrentPlayer();
-		rate+=3*currentPlayer.getHealth();
-		for(Card card : currentPlayer.getCardsOnTable())
-		{
-		    if(card != null) {
-                rate += card.getLife() + card.getAttack();
+        }
+        return bestMove;
+    }
+
+    private int evaluate(Game game, ArrayList<Move> fullMove) {
+        Game tempGame = game.clone();
+        tempGame.performMoves(fullMove);
+
+        return numberOfIntelligence == 0 ? evaluateAggressive(tempGame) : evaluateControlling(tempGame);
+    }
+
+    private int evaluateAggressive(Game game) {
+        int rate = 0;
+
+        rate -= 1000 * game.getEnemyPlayer().getHealth(); //enemy life
+
+        rate += 10 * game.getCurrentPlayer().getHealth(); //current life
+
+        rate += evaluateStateOfBoard(game);
+
+        return rate;
+    }
+
+    private int evaluateControlling(Game game) {
+        int rate = 0;
+
+        rate -= game.getEnemyPlayer().getHealth(); //enemy life
+
+        rate += 10 * game.getCurrentPlayer().getHealth();
+
+        rate += 1000 * evaluateStateOfBoard(game);
+
+        return rate;
+    }
+
+    private int evaluateStateOfBoard(Game game) {
+        int rate = 0;
+        int emptyEnemy = 0;
+        //minus for enemy cards on board
+        for (Card card : game.getEnemyPlayer().getCardsOnTable()) {
+            if (card != null) {
+                rate -= (100 * card.getLife() + card.getAttack());
+            } else {
+                emptyEnemy++;
             }
-		}
-		return rate;
-	}
+        }
+        //plus enemies killed
+        rate += 100 * emptyEnemy;
+
+        //plus new cards on board
+        for (Card card : game.getCurrentPlayer().getCardsOnTable()) {
+            if (card != null) {
+                rate += (card.getLife() + card.getAttack());
+            }
+        }
+        return rate;
+    }
 }

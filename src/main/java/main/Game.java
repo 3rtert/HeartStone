@@ -1,10 +1,7 @@
 package main;
 
 import moves.Move;
-import players.ConsolePlayer;
-import players.MCTSPlayer;
-import players.PlayerSIInterface;
-import players.SpoonPlayer;
+import players.*;
 
 import java.util.ArrayList;
 
@@ -45,23 +42,23 @@ public class Game {
     }
 
 
-    public void setAIPlayers(String player1, String player2) {
-        playersAI[0] = getPlayerAIFromString(player1);
-        playersAI[1] = getPlayerAIFromString(player2);
+    public void setAIPlayers(String player1, String player2, float c) {
+        playersAI[0] = getPlayerAIFromString(player1, c);
+        playersAI[1] = getPlayerAIFromString(player2, c);
     }
 
-    public PlayerSIInterface getPlayerAIFromString(String player) {
+    public PlayerSIInterface getPlayerAIFromString(String player, float c) {
         switch (player) {
             case "console":
                 return new ConsolePlayer();
             case "aggressive":
-                return new SpoonPlayer(2);
-            case "defensive":
-                return new SpoonPlayer(3);
-            case "mixed":
-                return new SpoonPlayer(4);
+                return new SpoonPlayer(0);
+            case "controlling":
+                return new SpoonPlayer(1);
             case "mcts":
-                return new MCTSPlayer();
+                return new MCTSPlayer(c);
+            case "random":
+                return new RandomPlayer();
             default:
                 return null;
         }
