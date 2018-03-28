@@ -134,15 +134,21 @@ public class TreeOfGame {
         if (moves == null) {
             moves = MovesGenerator.getAllMoves(currentGame);
         }
-        ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
+        if(!moves.isEmpty())
+        {
+        	ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
 
-        TreeOfGame newLeaf = new TreeOfGame(currentGame);
-        newLeaf.previousMove = currentMove;
-        newLeaf.currentGame.performMoves(currentMove);
+            TreeOfGame newLeaf = new TreeOfGame(currentGame);
+            newLeaf.previousMove = currentMove;
+            newLeaf.currentGame.performMoves(currentMove);
 
-        trees.add(newLeaf);
-
-        return newLeaf;
+            trees.add(newLeaf);
+            return newLeaf;
+        }
+        else
+        {
+        	return this;
+        }
     }
 
     private TreeOfGame selection()
