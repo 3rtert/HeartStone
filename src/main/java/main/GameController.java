@@ -7,9 +7,10 @@ public class GameController {
 
     private boolean withGui;
     private int moveMaxTime = 100;
-    private float c_param = (float) 100;
+
+    private float c_param = 1;
+    private int bestOf = 1;
     private GUIInterface gui;
-    private int simulateBestOf_param=1;
 
     private Game game;
 
@@ -26,7 +27,7 @@ public class GameController {
     }
 
     public void setPlayersAI(String player1, String player2) {
-        game.setAIPlayers(player1, player2, c_param, simulateBestOf_param);
+        game.setAIPlayers(player1, player2, c_param, bestOf);
     }
 
     private void playerMove() {
@@ -56,5 +57,9 @@ public class GameController {
 
     public void setC_param(float c_param) {
         this.c_param = c_param;
+    }
+
+    public void setBestOf(int bestOf) {
+        this.bestOf = bestOf;
     }
 }
