@@ -9,12 +9,11 @@ import java.util.Random;
 
 public class TreeOfGame {
 
-    private List trees = new ArrayList<TreeOfGame>();
+    private List<TreeOfGame> trees = new ArrayList<TreeOfGame>();
     private ArrayList<Move> previousMove;
     private ArrayList<ArrayList<Move>> moves;
     private Game currentGame;
     private int wins = 0;
-    private int loses = 0;
     private int simulations = 0;
 
     public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param) {
@@ -93,11 +92,11 @@ public class TreeOfGame {
             TreeOfGame current = null;
             double rate = 0;
             for (int i = 0; i < trees.size(); i++) {
-            	double ri = ((TreeOfGame) (trees.get(i))).wins / ((TreeOfGame) (trees.get(i))).simulations;
-                double tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / ((TreeOfGame) (trees.get(i))).simulations);
+            	double ri = trees.get(i).wins / trees.get(i).simulations;
+                double tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
                 if (tempRate > rate) {
                     rate = tempRate;
-                    current = (TreeOfGame) trees.get(i);
+                    current = trees.get(i);
                 }
             }
             return current;
