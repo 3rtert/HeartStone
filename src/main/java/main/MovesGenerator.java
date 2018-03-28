@@ -27,6 +27,9 @@ public class MovesGenerator {
         }
         output.addAll(possibleMovesCardAttacks);
         output.addAll(possibleMovesCardOnTable);
+        if(output.isEmpty()) {
+            output.add(new ArrayList<>());
+        }
         return output;
     }
 
@@ -146,16 +149,20 @@ public class MovesGenerator {
         int mana = game.getCurrentPlayer().getMana();
         int usedMana = 0;
 
-        for (int i = 0; i < numberOfMoves; i++) {
-            int moveIndex = random.nextInt(moves.size());
-            Move move = moves.get(moveIndex);
+            for (int i = 0; i < numberOfMoves; i++) {
+                if(moves.isEmpty()) {
+                    break;
+                }
+                int moveIndex = random.nextInt(moves.size());
+                Move move = moves.get(moveIndex);
 
-            usedMana += move.getMoveCost(game.getCurrentPlayer());
-            if(usedMana <= mana) {
-                toPerformMoves.add(move);
-                moves.remove(move);
+                usedMana += move.getMoveCost(game.getCurrentPlayer());
+                if (usedMana <= mana) {
+                    toPerformMoves.add(move);
+                    moves.remove(move);
+                }
+
             }
-        }
 
         Game tempGame = game.clone();
         Card[] myCards = tempGame.getCurrentPlayer().getCardsOnTable();
@@ -165,10 +172,14 @@ public class MovesGenerator {
             if (typeOfAttack == 0) {
                 toPerformMoves.add(new AttackCardMove(i, -1));
             } else {
-                int enemyCardIndex = random.nextInt(tempGame.getEnemyPlayer().getNumberOfCardsOnTable());
-                Move move = new AttackCardMove(i, tempGame.getEnemyPlayer().findIndexOfCard(enemyCardIndex));
-                toPerformMoves.add(move);
-                move.perform(tempGame.getCurrentPlayer(), tempGame.getEnemyPlayer());
+                if(tempGame.getEnemyPlayer().getNumberOfCardsOnTable() == 0) {
+                    toPerformMoves.add(new AttackCardMove(i, -1));
+                } else {
+                    int enemyCardIndex = random.nextInt(tempGame.getEnemyPlayer().getNumberOfCardsOnTable());
+                    Move move = new AttackCardMove(i, tempGame.getEnemyPlayer().findIndexOfCard(enemyCardIndex));
+                    toPerformMoves.add(move);
+                    move.perform(tempGame.getCurrentPlayer(), tempGame.getEnemyPlayer());
+                }
             }
         }
         return toPerformMoves;
