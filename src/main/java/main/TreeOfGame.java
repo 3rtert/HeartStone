@@ -16,6 +16,55 @@ public class TreeOfGame {
     private int wins = 0;
     private int simulations = 0;
 
+    
+    public int getePlayouts()
+    {
+    	return simulations;
+    }
+    
+    public int getMaxDeep()
+    {
+    	int deep=0;
+    	if(!trees.isEmpty())
+    	{
+    		for( int i=0;i<trees.size();i++)
+        	{
+        		int tempDeep=trees.get(i).getMaxDeep();
+        		if(tempDeep+1>deep)
+        			deep=tempDeep;
+        	}
+    	}
+    	return deep;
+    }
+    
+    public int getAverageDeep()
+    {
+    	int[] average=getAverageDeepAndNumberOfLeafs(0);
+    	return average[0]/average[1];
+    }
+    
+    private int[] getAverageDeepAndNumberOfLeafs(int currentDeep)
+    {
+    	int[] average=new int[2];
+    	if(!trees.isEmpty())
+    	{
+    		int tempAverage=0;
+    		for(int i=0;i<trees.size();i++)
+        	{
+    			int[] averageOfTree = trees.get(i).getAverageDeepAndNumberOfLeafs(currentDeep+1);
+        		average[0]+=averageOfTree[0];
+        		average[1]+=averageOfTree[1];
+        	}
+    	}
+    	else
+    	{
+    		average[0]=currentDeep;
+    		average[1]=1;
+    	}
+    	return average;
+    }
+    
+    
     public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param, int simulateBestOf_param) {
         long endTime = System.currentTimeMillis() + maxTime;
 
