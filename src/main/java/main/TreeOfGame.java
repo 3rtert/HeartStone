@@ -86,7 +86,7 @@ public class TreeOfGame {
     	return selection(2);
     }
     private TreeOfGame selection(float c) {
-        if (moves == null || moves.isEmpty() || trees.isEmpty()) {
+        if (moves == null ||  trees.isEmpty()) {
             return this;
         } else {
             TreeOfGame current = null;
