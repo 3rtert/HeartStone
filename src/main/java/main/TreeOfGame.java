@@ -99,7 +99,7 @@ public class TreeOfGame {
                     current = trees.get(i);
                 }
             }
-            return current.selection(c);
+            return current;
         }
     }
 
