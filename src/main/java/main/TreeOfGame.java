@@ -76,12 +76,12 @@ public class TreeOfGame {
 
     private ArrayList<Move> getBestMove() {
         ArrayList<Move> bestMove = null;
-        double rate = 0;
+        double rate = Double.MIN_VALUE;
         for (int i = 0; i < trees.size(); i++) {
-            double tempRate = wins / simulations;
+            double tempRate = trees.get(i).wins / trees.get(i).simulations;
             if (tempRate > rate) {
                 rate = tempRate;
-                bestMove = ((TreeOfGame) trees.get(i)).previousMove;
+                bestMove = trees.get(i).previousMove;
             }
         }
         return bestMove;
