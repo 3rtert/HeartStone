@@ -27,6 +27,7 @@ public class MovesGenerator {
         }
         output.addAll(possibleMovesCardAttacks);
         output.addAll(possibleMovesCardOnTable);
+
         if(output.isEmpty()) {
             output.add(new ArrayList<>());
         }
