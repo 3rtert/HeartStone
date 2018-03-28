@@ -9,6 +9,7 @@ public class GameController {
     private int moveMaxTime = 1000;
     private float c_param = 1;
     private GUIInterface gui;
+    private int simulateBestOf_param=1;
 
     private Game game;
 
@@ -25,7 +26,7 @@ public class GameController {
     }
 
     public void setPlayersAI(String player1, String player2) {
-        game.setAIPlayers(player1, player2, c_param);
+        game.setAIPlayers(player1, player2, c_param, simulateBestOf_param);
     }
 
     private void playerMove() {

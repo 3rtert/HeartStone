@@ -16,11 +16,11 @@ public class TreeOfGame {
     private int wins = 0;
     private int simulations = 0;
 
-    public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param) {
+    public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param, int simulateBestOf_param) {
         long endTime = System.currentTimeMillis() + maxTime;
 
         while (endTime > System.currentTimeMillis()) {
-            mcts(player, c_param);
+            mcts(player, c_param, simulateBestOf_param);
         }
 
         return getBestMove();
@@ -39,30 +39,44 @@ public class TreeOfGame {
         return bestMove;
     }
 
-    private int mcts(int player, float c_param) {
+    private int mcts(int player, float c_param, int simulateBestOf) {
         TreeOfGame currentTree;
         if ((currentTree = selection(c_param)) == this) {
-            int winner = simulate(expansion().currentGame.clone());
+            int winner = simulate(expansion().currentGame.clone(), simulateBestOf);
             int result = (winner == player) ? 1 : 0;
             wins += result;
             simulations++;
             return result;
         } else {
-            int result = currentTree.mcts(player, c_param);
+            int result = currentTree.mcts(player, c_param, simulateBestOf);
             wins += result;
             simulations++;
             return result;
         }
     }
 
-    int simulate(Game tempGame) // return number of player who won
+    int simulate(Game tempGame)
+    {
+    	return simulate(tempGame,1);
+    }
+    
+    int simulate(Game tempGame, int bestOf) // return number of player who won
     {
         tempGame.initializeMove(false);
         ArrayList<Move> moves = MovesGenerator.getRandomMove(tempGame);
+        for(int i = 1; i<bestOf; i++)
+        {
+        	ArrayList<Move> tempMoves = MovesGenerator.getRandomMove(tempGame);
+        	if(tempMoves.size()>moves.size())
+        	{
+        		moves=tempMoves;
+        	}
+        	
+        }
         tempGame.performMoves(moves);
         tempGame.nextRound();
         tempGame.endTour();
-        return tempGame.getPlayerWin() == -1 ? simulate(tempGame) : tempGame.getPlayerWin();
+        return tempGame.getPlayerWin() == -1 ? simulate(tempGame,bestOf) : tempGame.getPlayerWin();
     }
 
     private TreeOfGame expansion() {
