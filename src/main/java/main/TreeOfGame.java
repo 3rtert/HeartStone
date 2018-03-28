@@ -132,7 +132,7 @@ public class TreeOfGame {
     private TreeOfGame expansion() {
         currentGame.initializeMove(true);
         if (moves == null) {
-            MovesGenerator.getAllMoves(currentGame);
+            moves = MovesGenerator.getAllMoves(currentGame);
         }
         ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
 
