@@ -29,7 +29,7 @@ public class TreeOfGame {
     		for( int i=0;i<trees.size();i++)
         	{
         		int tempDeep=trees.get(i).getMaxDeep();
-        		if(tempDeep+1>deep)
+        		if(++tempDeep>deep)
         			deep=tempDeep;
         	}
     	}
@@ -69,15 +69,18 @@ public class TreeOfGame {
 
         while (endTime > System.currentTimeMillis()) {
             mcts(player, c_param, simulateBestOf_param);
+            //System.out.println("ocena "+rate+" "+trees.get(0).rate);
         }
-
+        //System.out.println(trees.get(0).trees.size());
+        
         return getBestMove();
     }
 
     private ArrayList<Move> getBestMove() {
         ArrayList<Move> bestMove = null;
-        double rate = Double.MIN_VALUE;
+        double rate = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < trees.size(); i++) {
+        	//System.out.println(trees.get(i).simulations + " " + trees.get(i).wins);
             double tempRate = trees.get(i).wins / trees.get(i).simulations;
             if (tempRate > rate) {
                 rate = tempRate;
@@ -89,18 +92,23 @@ public class TreeOfGame {
 
     private int mcts(int player, float c_param, int simulateBestOf) {
         TreeOfGame currentTree;
-        if ((currentTree = selection(c_param)) .equals(this)) {
-            int winner = simulate(expansion().currentGame.clone(), simulateBestOf);
-            int result = (winner == player) ? 1 : 0;
-            wins += result;
-            simulations++;
-            return result;
+        int result=0;
+        if ((currentTree = selection(c_param)).equals(this)) {
+        	TreeOfGame expansionedTree = expansion();
+            int winner = simulate(expansionedTree.currentGame.clone(), simulateBestOf);
+            //System.out.println("Wygra³em: "+result);
+            result = (winner == player) ? 1 : 0;
+            expansionedTree.wins+=result;
+            expansionedTree.simulations++;
+            //System.out.println("to ja");
+            
         } else {
-            int result = currentTree.mcts(player, c_param, simulateBestOf);
-            wins += result;
-            simulations++;
-            return result;
+        	//#System.out.println("to nie ja");
+            result = currentTree.mcts(player, c_param, simulateBestOf);
         }
+        wins+= result;
+        simulations++;
+        return result;
     }
 
     int simulate(Game tempGame)
@@ -124,6 +132,8 @@ public class TreeOfGame {
         tempGame.performMoves(moves);
         tempGame.nextRound();
         tempGame.endTour();
+        //if(tempGame.getPlayerWin()!=-1)
+        	//System.out.println("Symulacja");
         return tempGame.getPlayerWin() == -1 ? simulate(tempGame,bestOf) : tempGame.getPlayerWin();
     }
 
@@ -131,6 +141,7 @@ public class TreeOfGame {
         currentGame.initializeMove(true);
         if (moves == null) {
             moves = MovesGenerator.getAllMoves(currentGame);
+            //System.out.println("ruchy: "+moves.size());
         }
         if(!moves.isEmpty())
         {
@@ -139,12 +150,14 @@ public class TreeOfGame {
             TreeOfGame newLeaf = new TreeOfGame(currentGame);
             newLeaf.previousMove = currentMove;
             newLeaf.currentGame.performMoves(currentMove);
-
+            newLeaf.currentGame.nextRound();
+            newLeaf.currentGame.endTour();
             trees.add(newLeaf);
             return newLeaf;
         }
         else
         {
+        	//System.out.println("Brak ekspancji");
         	return this;
         }
     }
@@ -154,24 +167,29 @@ public class TreeOfGame {
     	return selection(2);
     }
     private TreeOfGame selection(float c) {
-        if (trees.isEmpty()) {
+        if (trees.isEmpty()) 
+        {
             return this;
-        } else {
+        } 
+        else 
+        {
             TreeOfGame current = null;
-            double rate = 0;
-            for (int i = 0; i < trees.size(); i++) {
-                double tempRate = 0;
-                if(trees.get(i).simulations != 0) {
-                    double ri = trees.get(i).wins / trees.get(i).simulations;
-                    tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
-                }
-
-                this.rate = rate;
-                if (tempRate > rate) {
+            
+            double rate = Double.NEGATIVE_INFINITY;
+            for (int i = 0; i < trees.size(); i++) 
+            {
+                double tempRate = Double.NEGATIVE_INFINITY;
+                double ri = trees.get(i).wins / trees.get(i).simulations;
+                tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
+                trees.get(i).rate=tempRate;
+                //System.out.println("temprate: "+tempRate);
+                if (tempRate > rate) 
+                {
                     rate = tempRate;
                     current = trees.get(i);
                 }
             }
+            //System.out.println("wybieram nie siebie "+rate+" "+this.rate);
             if(rate<=this.rate)
             	current=this;
             return current;

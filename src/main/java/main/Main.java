@@ -66,12 +66,16 @@ public class Main
                 controller.init();
                 if(i % 2 == 1) {
                     controller.setPlayersAI(player1, player2);
+                    if(controller.startGame() == 0) {
+                        firstPlayerWins++;
+                    }
+
                 } else {
                     controller.setPlayersAI(player2, player1);
-                }
+                    if(controller.startGame() == 1) {
+                        firstPlayerWins++;
+                    }
 
-                if(controller.startGame() == 0) {
-                    firstPlayerWins++;
                 }
 
             }
