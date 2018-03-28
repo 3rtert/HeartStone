@@ -9,19 +9,18 @@ import java.util.Random;
 
 public class TreeOfGame {
 
-    private List trees = new ArrayList<TreeOfGame>();
+    private List<TreeOfGame> trees = new ArrayList<TreeOfGame>();
     private ArrayList<Move> previousMove;
     private ArrayList<ArrayList<Move>> moves;
     private Game currentGame;
     private int wins = 0;
-    private int loses = 0;
     private int simulations = 0;
 
-    public ArrayList<Move> calculateBestMove(long maxTime, int player) {
+    public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param) {
         long endTime = System.currentTimeMillis() + maxTime;
 
         while (endTime > System.currentTimeMillis()) {
-            mcts(player);
+            mcts(player, c_param);
         }
 
         return getBestMove();
@@ -40,16 +39,16 @@ public class TreeOfGame {
         return bestMove;
     }
 
-    private int mcts(int player) {
+    private int mcts(int player, float c_param) {
         TreeOfGame currentTree;
-        if ((currentTree = selection()) == this) {
+        if ((currentTree = selection(c_param)) == this) {
             int winner = simulate(expansion().currentGame.clone());
             int result = (winner == player) ? 1 : 0;
             wins += result;
             simulations++;
             return result;
         } else {
-            int result = currentTree.mcts(player);
+            int result = currentTree.mcts(player, c_param);
             wins += result;
             simulations++;
             return result;
@@ -86,17 +85,18 @@ public class TreeOfGame {
     {
     	return selection(2);
     }
-    private TreeOfGame selection(int c) {
+    private TreeOfGame selection(float c) {
         if (moves == null || moves.isEmpty() || trees.isEmpty()) {
             return this;
         } else {
             TreeOfGame current = null;
             double rate = 0;
             for (int i = 0; i < trees.size(); i++) {
-                double tempRate = wins / simulations + Math.sqrt(c * Math.log1p(((TreeOfGame) (trees.get(i))).simulations) / simulations);
+            	double ri = trees.get(i).wins / trees.get(i).simulations;
+                double tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
                 if (tempRate > rate) {
                     rate = tempRate;
-                    current = (TreeOfGame) trees.get(i);
+                    current = trees.get(i);
                 }
             }
             return current;
