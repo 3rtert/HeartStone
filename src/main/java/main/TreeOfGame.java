@@ -18,7 +18,7 @@ public class TreeOfGame {
     private double rate=0;
 
     
-    public int getePlayouts()
+    public int getPlayouts()
     {
     	return simulations;
     }
