@@ -161,9 +161,13 @@ public class TreeOfGame {
             TreeOfGame current = null;
             double rate = 0;
             for (int i = 0; i < trees.size(); i++) {
-            	double ri = trees.get(i).wins / trees.get(i).simulations;
-                double tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
-                this.rate=rate;
+                double tempRate = 0;
+                if(trees.get(i).simulations != 0) {
+                    double ri = trees.get(i).wins / trees.get(i).simulations;
+                    tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
+                }
+
+                this.rate = rate;
                 if (tempRate > rate) {
                     rate = tempRate;
                     current = trees.get(i);

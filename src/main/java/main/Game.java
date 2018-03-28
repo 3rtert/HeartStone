@@ -94,6 +94,10 @@ public class Game {
             if (!move.perform(player[currentPlayer], player[enemyPlayer])) {
                 return false;
             }
+            if (player[enemyPlayer].isChampDestroyed()) {
+                playerWin = player[currentPlayer].getId();
+                break;
+            }
         }
         return true;
     }
