@@ -29,7 +29,7 @@ public class MovesGenerator {
         output.addAll(possibleMovesCardOnTable);
 
         if(output.isEmpty()) {
-            output.add(new ArrayList<>());
+            output.add(new ArrayList<Move>());
         }
         return output;
     }
