@@ -83,7 +83,7 @@ public class Game {
         for (Move move : moves) {
             move.perform(player[currentPlayer], player[enemyPlayer]);
             if (player[enemyPlayer].isChampDestroyed()) {
-                playerWin = currentPlayer;
+                playerWin = player[currentPlayer].getId();
                 break;
             }
         }
@@ -134,4 +134,5 @@ public class Game {
     public int getRound() {
         return round;
     }
+
 }

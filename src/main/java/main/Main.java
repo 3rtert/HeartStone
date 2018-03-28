@@ -60,13 +60,20 @@ public class Main
             if(commandLine.hasOption("t")) {
                 controller.setMoveMaxTime(Integer.parseInt(commandLine.getOptionValue("t")));
             }
+
             int firstPlayerWins = 0;
             for(int i = 0; i < numberOfPlays; i++) {
                 controller.init();
-                controller.setPlayersAI(player1, player2);
+                if(i % 2 == 1) {
+                    controller.setPlayersAI(player1, player2);
+                } else {
+                    controller.setPlayersAI(player2, player1);
+                }
+
                 if(controller.startGame() == 0) {
                     firstPlayerWins++;
                 }
+
             }
 
             System.out.print(firstPlayerWins + "," + (numberOfPlays - firstPlayerWins) + "\n");

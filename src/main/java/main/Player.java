@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Player {
 
+    private int id;
     private int hp = Constants.PLAYER_HP;
     private int mana = 0;
     private int penaltyForEmptyDeck = 1;
@@ -20,6 +21,10 @@ public class Player {
 
     private Stack<Card> stack = new Stack<>();
 
+    public int getId() {
+        return id;
+    }
+
     public void init(boolean starting) {
         createRandomDeck();//createTestDeck();
 
@@ -28,7 +33,10 @@ public class Player {
         getCardFromDeck();
 
         if (!starting) {
+            id = 1;
             getCardFromDeck();
+        } else {
+            id = 0;
         }
     }
 
