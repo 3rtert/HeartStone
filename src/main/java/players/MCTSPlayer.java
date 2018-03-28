@@ -18,7 +18,7 @@ public class MCTSPlayer implements PlayerSIInterface {
 	public ArrayList<Move> calculateNextMove(Game game, long maxTime)
 	{
 		TreeOfGame treeOfGame=new TreeOfGame(game);
-		return treeOfGame.calculateBestMove(maxTime, game.getCurrentPLayerId());
+		return treeOfGame.calculateBestMove(maxTime, game.getCurrentPLayerId(), c_param);
 	}
 
 }

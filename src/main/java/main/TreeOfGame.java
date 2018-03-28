@@ -17,11 +17,11 @@ public class TreeOfGame {
     private int loses = 0;
     private int simulations = 0;
 
-    public ArrayList<Move> calculateBestMove(long maxTime, int player) {
+    public ArrayList<Move> calculateBestMove(long maxTime, int player, float c_param) {
         long endTime = System.currentTimeMillis() + maxTime;
 
         while (endTime > System.currentTimeMillis()) {
-            mcts(player);
+            mcts(player, c_param);
         }
 
         return getBestMove();
@@ -40,16 +40,16 @@ public class TreeOfGame {
         return bestMove;
     }
 
-    private int mcts(int player) {
+    private int mcts(int player, float c_param) {
         TreeOfGame currentTree;
-        if ((currentTree = selection()) == this) {
+        if ((currentTree = selection(c_param)) == this) {
             int winner = simulate(expansion().currentGame.clone());
             int result = (winner == player) ? 1 : 0;
             wins += result;
             simulations++;
             return result;
         } else {
-            int result = currentTree.mcts(player);
+            int result = currentTree.mcts(player, c_param);
             wins += result;
             simulations++;
             return result;
@@ -86,7 +86,7 @@ public class TreeOfGame {
     {
     	return selection(2);
     }
-    private TreeOfGame selection(int c) {
+    private TreeOfGame selection(float c) {
         if (moves == null || moves.isEmpty() || trees.isEmpty()) {
             return this;
         } else {
