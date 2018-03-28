@@ -14,6 +14,7 @@ public class Card {
     // 2 - deal 2 damage to all enemies
     // 3 - deal 3 damage
     // 4 - destroy random enemy minion
+    
     private int numberOfMagic;
     private boolean magicCard;
     private boolean attackPossible;

@@ -42,12 +42,12 @@ public class Game {
     }
 
 
-    public void setAIPlayers(String player1, String player2, float c) {
-        playersAI[0] = getPlayerAIFromString(player1, c);
-        playersAI[1] = getPlayerAIFromString(player2, c);
+    public void setAIPlayers(String player1, String player2, float c, int simulateBestOf) {
+        playersAI[0] = getPlayerAIFromString(player1, c, simulateBestOf);
+        playersAI[1] = getPlayerAIFromString(player2, c, simulateBestOf);
     }
 
-    public PlayerSIInterface getPlayerAIFromString(String player, float c) {
+    public PlayerSIInterface getPlayerAIFromString(String player, float c, int simulateBestOf) {
         switch (player) {
             case "console":
                 return new ConsolePlayer();
@@ -56,7 +56,7 @@ public class Game {
             case "controlling":
                 return new SpoonPlayer(1);
             case "mcts":
-                return new MCTSPlayer(c);
+                return new MCTSPlayer(c,simulateBestOf);
             case "random":
                 return new RandomPlayer();
             default:
