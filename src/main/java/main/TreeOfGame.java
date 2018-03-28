@@ -91,7 +91,7 @@ public class TreeOfGame {
 
     private int mcts(int player, float c_param, int simulateBestOf) {
         TreeOfGame currentTree;
-        if ((currentTree = selection(c_param)) == this) {
+        if ((currentTree = selection(c_param)) .equals(this)) {
             int winner = simulate(expansion().currentGame.clone(), simulateBestOf);
             int result = (winner == player) ? 1 : 0;
             wins += result;
