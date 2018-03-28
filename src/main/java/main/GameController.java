@@ -6,7 +6,7 @@ import GUI.GUIInterface;
 public class GameController {
 
     private boolean withGui;
-    private int moveMaxTime = 1000;
+    private int moveMaxTime = 100;
     private float c_param = 1;
     private GUIInterface gui;
 
