@@ -7,7 +7,7 @@ public class GameController {
 
     private boolean withGui;
     private int moveMaxTime = 100;
-    private float c_param = 1;
+    private float c_param = (float) 100;
     private GUIInterface gui;
     private int simulateBestOf_param=1;
 

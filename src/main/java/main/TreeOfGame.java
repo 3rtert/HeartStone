@@ -13,7 +13,7 @@ public class TreeOfGame {
     private Game currentGame;
     private int wins = 0;
     private int simulations = 0;
-    private double rate=0;
+    private double rate=0.5;
 
     
     public int getPlayouts()
@@ -69,7 +69,7 @@ public class TreeOfGame {
 
         while (endTime > System.currentTimeMillis()) {
             mcts(player, c_param, simulateBestOf_param);
-            //System.out.println("ocena "+rate+" "+trees.get(0).rate);
+            //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" ");
         }
         //System.out.println(trees.get(0).trees.size());
         
@@ -145,7 +145,7 @@ public class TreeOfGame {
         }
         if(!moves.isEmpty())
         {
-        	ArrayList<Move> currentMove = (ArrayList<Move>) moves.remove(0);
+        	ArrayList<Move> currentMove = moves.remove(0);
 
             TreeOfGame newLeaf = new TreeOfGame(currentGame);
             newLeaf.previousMove = currentMove;
@@ -157,7 +157,7 @@ public class TreeOfGame {
         }
         else
         {
-        	//System.out.println("Brak ekspancji");
+        	//System.out.println("Brak ekspansji");
         	return this;
         }
     }
@@ -174,7 +174,6 @@ public class TreeOfGame {
         else 
         {
             TreeOfGame current = null;
-            
             double rate = Double.NEGATIVE_INFINITY;
             for (int i = 0; i < trees.size(); i++) 
             {
