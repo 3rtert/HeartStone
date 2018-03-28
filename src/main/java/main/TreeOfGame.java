@@ -15,6 +15,7 @@ public class TreeOfGame {
     private Game currentGame;
     private int wins = 0;
     private int simulations = 0;
+    private double rate=0;
 
     
     public int getePlayouts()
@@ -149,7 +150,7 @@ public class TreeOfGame {
     	return selection(2);
     }
     private TreeOfGame selection(float c) {
-        if (moves == null ||  trees.isEmpty()) {
+        if (trees.isEmpty()) {
             return this;
         } else {
             TreeOfGame current = null;
@@ -157,11 +158,14 @@ public class TreeOfGame {
             for (int i = 0; i < trees.size(); i++) {
             	double ri = trees.get(i).wins / trees.get(i).simulations;
                 double tempRate = ri + c * Math.sqrt(Math.log1p(simulations) / trees.get(i).simulations);
+                this.rate=rate;
                 if (tempRate > rate) {
                     rate = tempRate;
                     current = trees.get(i);
                 }
             }
+            if(rate<=this.rate)
+            	current=this;
             return current;
         }
     }
