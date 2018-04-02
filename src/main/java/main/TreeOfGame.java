@@ -96,7 +96,6 @@ public class TreeOfGame {
         	System.out.println(m.toString());
         }
         System.out.println("---");*/
-        
         return bestMove;
     }
 
