@@ -37,9 +37,7 @@ public class Card {
     }
 
     public void attack() {
-        if (attackPossible) {
-            attackPossible = false;
-        }
+        attackPossible = false;
     }
 
     public void dealDmg(int dmg) {

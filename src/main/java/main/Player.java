@@ -146,6 +146,7 @@ public class Player {
     public void putCardOnTable(int index) {
         try {
             Card card = getCardInHand(index);
+            card.attack(); //disable attack in this round
             addCardToBoard(card);
 
             destroyCardInHand(index);

@@ -28,8 +28,8 @@ public class TreeOfGame {
     	{
     		for( int i=0;i<trees.size();i++)
         	{
-        		int tempDeep=trees.get(i).getMaxDeep();
-        		if(++tempDeep>deep)
+        		int tempDeep=trees.get(i).getMaxDeep()+1;
+        		if(tempDeep>deep)
         			deep=tempDeep;
         	}
     	}
@@ -69,10 +69,11 @@ public class TreeOfGame {
 
         while (endTime > System.currentTimeMillis()) {
             mcts(player, c_param, simulateBestOf_param);
+            rate = wins / simulations + c_param*Math.sqrt(Math.log1p(simulations) / simulations);
             //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep());
         }
         //System.out.println(trees.get(0).trees.size());
-        //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep());
+        //System.out.println("mcts: "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep()+" "+moves.size());
         
         return getBestMove();
     }

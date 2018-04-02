@@ -75,6 +75,9 @@ public class Game {
             player[currentPlayer].getCard();
         }
 
+        if (player[enemyPlayer].isChampDestroyed()) {
+            playerWin = player[currentPlayer].getId();
+        }
         player[currentPlayer].updateCardsAttack();
         player[currentPlayer].clearAllMagicCards();
     }

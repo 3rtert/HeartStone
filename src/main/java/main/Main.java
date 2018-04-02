@@ -79,7 +79,6 @@ public class Main
                 }
 
             }
-
             System.out.print(firstPlayerWins + "," + (numberOfPlays - firstPlayerWins) + "\n");
 
         } catch (Exception exception) {

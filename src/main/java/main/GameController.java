@@ -8,8 +8,8 @@ import GUI.GUIInterface;
 public class GameController {
 
     private boolean withGui;
-    private int moveMaxTime = 100;
-    private float c_param = (float) 100;
+    private int moveMaxTime = 500;
+    private float c_param = (float) 1.41;
     private GUIInterface gui;
     private int simulateBestOf_param=1;
 
@@ -37,10 +37,10 @@ public class GameController {
         if (withGui) {
             gui.refresh(game);
         }
-        
+        /*
         System.out.println("Nastepny ruch: ");
         Scanner inputReader = new Scanner(System.in);
-        inputReader.nextLine();
+        inputReader.nextLine();*/
         game.move(moveMaxTime);
         game.endTour();
     }
