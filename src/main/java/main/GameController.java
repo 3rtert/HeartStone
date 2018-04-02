@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Scanner;
+
 import GUI.GUI;
 import GUI.GUIInterface;
 
@@ -35,7 +37,10 @@ public class GameController {
         if (withGui) {
             gui.refresh(game);
         }
-
+        
+        System.out.println("Nastepny ruch: ");
+        Scanner inputReader = new Scanner(System.in);
+        inputReader.nextLine();
         game.move(moveMaxTime);
         game.endTour();
     }

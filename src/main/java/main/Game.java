@@ -33,6 +33,8 @@ public class Game {
         Game newGame = new Game();
         newGame.player[0] = player[0].clone();
         newGame.player[1] = player[1].clone();
+        newGame.playersAI[0]=playersAI[0];
+        newGame.playersAI[1]=playersAI[1];
         newGame.currentPlayer = currentPlayer;
         newGame.enemyPlayer = enemyPlayer;
         newGame.round = round;
@@ -79,6 +81,13 @@ public class Game {
 
     public void move(int maxTime) {
         ArrayList<Move> moves = playersAI[currentPlayer].calculateNextMove(this, maxTime);
+        
+        /*System.out.println(currentPlayer==0?"mcts":"random");
+        for(Move m : moves)
+        {
+        	System.out.println(m.toString());
+        }*/
+        
         //MovesGenerator.printArrayOfMoves(moves);
         for (Move move : moves) {
             move.perform(player[currentPlayer], player[enemyPlayer]);

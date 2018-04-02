@@ -23,6 +23,7 @@ public class AttackCardMove implements Move {
     public boolean perform(Player makingMovePlayer, Player enemyPlayer) {
         try {
             Card myCard = makingMovePlayer.getCardOnTable(indexOfAttackingCard);
+            //System.out.println("karta: "+indexOfAttackingCard+" ataku: "+myCard.getAttack());
             if (myCard == null || !myCard.canCardAttack() || enemyPlayer.getHealth() <= 0) {
                 return false;
             }

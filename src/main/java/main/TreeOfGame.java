@@ -13,7 +13,7 @@ public class TreeOfGame {
     private Game currentGame;
     private int wins = 0;
     private int simulations = 0;
-    private double rate=0.5;
+    private double rate=100;
 
     
     public int getPlayouts()
@@ -69,9 +69,10 @@ public class TreeOfGame {
 
         while (endTime > System.currentTimeMillis()) {
             mcts(player, c_param, simulateBestOf_param);
-            //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" ");
+            //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep());
         }
         //System.out.println(trees.get(0).trees.size());
+        //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep());
         
         return getBestMove();
     }
@@ -87,6 +88,13 @@ public class TreeOfGame {
                 bestMove = trees.get(i).previousMove;
             }
         }
+        /*System.out.println("---");
+        System.out.println("MCTS"+trees.size());
+        for(Move m : bestMove)
+        {
+        	System.out.println(m.toString());
+        }
+        System.out.println("---");*/
         return bestMove;
     }
 

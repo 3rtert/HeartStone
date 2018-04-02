@@ -17,7 +17,7 @@ public class Card {
     
     private int numberOfMagic;
     private boolean magicCard;
-    private boolean attackPossible;
+    private boolean attackPossible=false;
 
     public Card(int cost, int attack, int life, int numberOfMagic, boolean magicCard, boolean attackPossible) {
         this.cost = cost;

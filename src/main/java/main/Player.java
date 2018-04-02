@@ -167,6 +167,7 @@ public class Player {
 
     public void getCardFromDeck() {
         addCardToHand(stack.pop());
+        //System.out.println("karta wzieta");
     }
 
     public void addCardToHand(Card card) {
