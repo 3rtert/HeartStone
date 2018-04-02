@@ -71,6 +71,7 @@ public class TreeOfGame {
             mcts(player, c_param, simulateBestOf_param);
             rate = wins / simulations + c_param*Math.sqrt(Math.log1p(simulations) / simulations);
             //System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep());
+            System.out.println("ocena "+rate+" "+trees.get(0).rate+" "+trees.size()+" ");
         }
         //System.out.println(trees.get(0).trees.size());
         //System.out.println("mcts: "+rate+" "+trees.get(0).rate+" "+trees.size()+" "+getMaxDeep()+" "+moves.size());
@@ -84,6 +85,7 @@ public class TreeOfGame {
         for (int i = 0; i < trees.size(); i++) {
         	//System.out.println(trees.get(i).simulations + " " + trees.get(i).wins);
             double tempRate = trees.get(i).wins / trees.get(i).simulations;
+            System.out.println(tempRate);
             if (tempRate > rate) {
                 rate = tempRate;
                 bestMove = trees.get(i).previousMove;
@@ -106,7 +108,7 @@ public class TreeOfGame {
         if ((currentTree = selection(c_param)).equals(this)) {
         	TreeOfGame expansionedTree = expansion();
             int winner = simulate(expansionedTree.currentGame.clone(), simulateBestOf);
-            //System.out.println("Wygra³em: "+result);
+            //System.out.println("Wygraï¿½em: "+result);
             result = (winner == player) ? 1 : 0;
             expansionedTree.wins+=result;
             expansionedTree.simulations++;
@@ -127,7 +129,7 @@ public class TreeOfGame {
     }
     
     int simulate(Game tempGame, int bestOf) // return number of player who won
-    {
+     {
         tempGame.initializeMove(false);
         ArrayList<Move> moves = MovesGenerator.getRandomMove(tempGame);
         for(int i = 1; i<bestOf; i++)
