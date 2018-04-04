@@ -63,4 +63,12 @@ public class GameController {
     public void setC_param(float c_param) {
         this.c_param = c_param;
     }
+
+	public int getBestOf() {
+		return bestOf;
+	}
+
+	public void setBestOf(int bestOf) {
+		this.bestOf = bestOf;
+	}
 }
